@@ -6,7 +6,7 @@
  */
 
 #ifndef LEXER_INTERNAL_H__
-#define LEXER_ITNERNAL_H__
+#define LEXER_INTERNAL_H__
 
 #include <educasort/unit-test.h>
 
