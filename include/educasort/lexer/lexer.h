@@ -11,8 +11,30 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-/* Opaque token structure. */
-typedef struct token token_t;
+enum token_type {
+  TOKEN_NULL,
+
+  TOKEN_STRING, /* [_a-zA-Z]* */
+  TOKEN_NUMBER, /* [0-9]* */
+  TOKEN_OPENING_PARENT, /* ( */
+  TOKEN_CLOSING_PARENT, /* ) */
+  TOKEN_OPENING_BRACE, /* { */
+  TOKEN_CLOSING_BRACE, /* } */
+  TOKEN_COMA, /* , */
+
+  /** Keywords (cannot be used as string). **/
+  TOKEN_DECLARATION, /* declaration */
+  TOKEN_INTEGER, /* integer */
+
+  TOKEN_END,
+};
+
+struct token {
+  enum token_type type;
+  size_t start; /* offset of the token start. */
+  size_t end; /* offset of the token end. */
+  size_t line;
+};
 
 /**
  * Fill the next token.
@@ -21,15 +43,15 @@ typedef struct token token_t;
  * @param len Length of the string.
  * @param tok Token to fill.
  *
- * @return True if the token has been filled, false otherwise.
+ * @return true if the token has been filled, false otherwise.
  */
-bool lexer_token_fill(const char *sort, size_t len, token_t *tok);
+bool lexer_token_fill(const char *sort, size_t len, struct token *tok);
 
 /**
  * Eat the token filled by @c lexer_token_fill.
  *
  * @param tok Token to eat.
  */
-void lexer_token_eat(token_t *tok);
+void lexer_token_eat(struct token *tok);
 
 #endif /* !LEXER_H__ */

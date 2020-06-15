@@ -92,6 +92,7 @@ educasort_inc = include_directories('include', '.')
 # Order can matter according to dependencies.
 modules = [
   'lexer',
+  'parser',
 ]
 
 # Add sources and unit tests (if exist) for each module.

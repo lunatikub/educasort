@@ -125,15 +125,14 @@ TEST_F(Lexer, isDigit)
 /**
  * Test sort lexing.
  */
-TEST_F(Lexer, AlgoName)
+TEST_F(Lexer, AlgoSort)
 {
-  std::string sort = "FooSort(A array)";
+  std::string sort = " FooSort (  A ) ";
 
   const static struct token_list toks[] = {
     { "FooSort", TOKEN_STRING },
     { "(", TOKEN_OPENING_PARENT },
     { "A", TOKEN_STRING },
-    { "array", TOKEN_STRING },
     { ")", TOKEN_CLOSING_PARENT },
   };
 
