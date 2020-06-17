@@ -14,14 +14,18 @@
 static void ast_destroy_vardec_node(struct ast_node *node)
 {
   struct ast_vardec *vardec_node = ast_vardec_get(node);
-  free(vardec_node->name);
+  if (vardec_node->name != NULL) {
+    free(vardec_node->name);
+  }
   free(node);
 }
 
 static void ast_destroy_sort_node(struct ast_node *node)
 {
   struct ast_sort *sort_node = ast_sort_get(node);
-  free(sort_node->name);
+  if (sort_node->name != NULL) {
+    free(sort_node->name);
+  }
   free(node);
 }
 

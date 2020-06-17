@@ -114,6 +114,7 @@ bool lexer_token_fill(const char *sort, size_t len, struct token *tok)
     CASE('{', TOKEN_OPENING_BRACE);
     CASE('}', TOKEN_CLOSING_BRACE);
     CASE(',', TOKEN_COMA);
+    CASE(':', TOKEN_COLON);
   };
 #undef CASE
 
