@@ -54,6 +54,7 @@ static const char* tokentype2str(enum token_type type)
     case TOKEN_OPENING_BRACE: return "{";
     case TOKEN_CLOSING_BRACE: return "}";
     case TOKEN_COMA: return ",";
+    case TOKEN_COLON: return ":";
     case TOKEN_DECLARATION: return "declaration";
     case TOKEN_INTEGER: return "integer";
     case TOKEN_END: return "end";
@@ -144,15 +145,17 @@ TEST_F(Lexer, AlgoSort)
  */
 TEST_F(Lexer, Declaration)
 {
-  std::string sort = "declaration { i integer, j integer, }";
+  std::string sort = "declaration { i : integer, j: integer, }";
 
   const static struct token_list toks[] = {
     { "declaration", TOKEN_DECLARATION },
     { "{", TOKEN_OPENING_BRACE },
     { "i", TOKEN_IDENTIFIER },
+    { ":", TOKEN_COLON },
     { "integer", TOKEN_INTEGER },
     { ",", TOKEN_COMA },
     { "j", TOKEN_IDENTIFIER },
+    { ":", TOKEN_COLON },
     { "integer", TOKEN_INTEGER },
     { ",", TOKEN_COMA },
     { "}", TOKEN_CLOSING_BRACE },

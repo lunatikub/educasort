@@ -21,6 +21,8 @@ main(int argc, char **argv)
 }
 
 #define NULL_NODE ((struct ast_node*)NULL)
+#define NEXT_NODE(N) (struct ast_node**)&N->node.next
+#define CHILD_NODE(N) (struct ast_node**)&N->node.child
 
 /**
  * Test empty sort algo parsing.
@@ -42,6 +44,9 @@ TEST_F(Parser, EmptySort)
   ast_destroy(&ast);
 }
 
+/**
+ * Test syntax errors when parsing the sort section.
+ */
 TEST_F(Parser, SortSyntaxErr)
 {
   std::string sort;
@@ -70,6 +75,79 @@ TEST_F(Parser, EmptyDeclaration)
 
   token_init(&tok);
   sort = "declaration { }";
-  EXPECT_TRUE(parse_declaration((struct ast_node*)node, &tok, sort.c_str(), sort.length()));
+  EXPECT_TRUE(parse_declaration(NEXT_NODE(node), &tok, sort.c_str(), sort.length()));
+  EXPECT_EQ(node->node.child, NULL_NODE);
+  EXPECT_EQ(node->node.next, NULL_NODE);
+  ast_destroy_node((struct ast_node*)node);
+}
+
+/**
+ * Test variable declaration parsing.
+ */
+TEST_F(Parser, Declaration)
+{
+  std::string sort;
+  struct ast_sort *node = (struct ast_sort*)node_new(NODE_SORT, sizeof(*node));
+  node->name = strdup("foo");
+  struct token tok;
+
+  token_init(&tok);
+  sort = "declaration { i:integer, j:integer, }";
+  EXPECT_TRUE(parse_declaration(NEXT_NODE(node), &tok, sort.c_str(), sort.length()));
+  EXPECT_EQ(node->node.child, NULL_NODE);
+  EXPECT_NE(node->node.next, NULL_NODE);
+  struct ast_vardec *vardec_node = ast_vardec_get(node->node.next);
+  EXPECT_EQ(vardec_node->node.type, NODE_VARDEC);
+  EXPECT_EQ(vardec_node->type, VAR_INTEGER);
+  EXPECT_EQ(strcmp(vardec_node->name, "i"), 0);
+  EXPECT_EQ(vardec_node->node.child, NULL_NODE);
+  vardec_node = ast_vardec_get(vardec_node->node.next);
+  EXPECT_EQ(vardec_node->node.type, NODE_VARDEC);
+  EXPECT_EQ(vardec_node->type, VAR_INTEGER);
+  EXPECT_EQ(strcmp(vardec_node->name, "j"), 0);
+  EXPECT_EQ(vardec_node->node.child, NULL_NODE);
+  ast_destroy_node((struct ast_node*)node);
+}
+
+/**
+ * Test syntax errors when parsing the declaration.
+ */
+TEST_F(Parser, DeclarationSyntaxErr)
+{
+  std::string sort;
+  struct token tok;
+  struct ast_sort *node;
+
+  // typo 'declaration'
+  node = (struct ast_sort*)node_new(NODE_SORT, sizeof(*node));
+  node->name = strdup("foo");
+  token_init(&tok);
+  sort = "bar { i integer, }";
+  EXPECT_FALSE(parse_declaration(NEXT_NODE(node), &tok, sort.c_str(), sort.length()));
+  ast_destroy_node((struct ast_node*)node);
+
+
+  // missing ':'
+  node = (struct ast_sort*)node_new(NODE_SORT, sizeof(*node));
+  node->name = strdup("foo");
+  token_init(&tok);
+  sort = "declaration { i integer }";
+  EXPECT_FALSE(parse_declaration(NEXT_NODE(node), &tok, sort.c_str(), sort.length()));
+  ast_destroy_node((struct ast_node*)node);
+
+  // missing type
+  node = (struct ast_sort*)node_new(NODE_SORT, sizeof(*node));
+  node->name = strdup("foo");
+  token_init(&tok);
+  sort = "declaration { i, j : integer }";
+  EXPECT_FALSE(parse_declaration(NEXT_NODE(node), &tok, sort.c_str(), sort.length()));
+  ast_destroy_node((struct ast_node*)node);
+
+  // missing ','
+  node = (struct ast_sort*)node_new(NODE_SORT, sizeof(*node));
+  node->name = strdup("foo");
+  token_init(&tok);
+  sort = "declaration { i:integer }";
+  EXPECT_FALSE(parse_declaration(NEXT_NODE(node), &tok, sort.c_str(), sort.length()));
   ast_destroy_node((struct ast_node*)node);
 }

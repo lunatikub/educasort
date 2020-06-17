@@ -51,6 +51,11 @@ parse_vardec(struct ast_node **node, struct token *tok,
   vardec_node->name = token_strndup(sort, tok);
   lexer_token_eat(tok);
 
+  /* : */
+  if (!parse_expected(tok, sort, len, TOKEN_COLON)) {
+    return false;
+  }
+
   /* Var type */
   if (!lexer_token_fill(sort, len, tok)) {
     return false;
@@ -66,14 +71,10 @@ parse_vardec(struct ast_node **node, struct token *tok,
     lexer_token_eat(tok);
     return parse_vardec(&vardec_node->node.next, tok, sort, len);
   }
-  /* End of declaration. */
-  if (tok->type == TOKEN_CLOSING_BRACE) {
-    return true;
-  }
   return false;
 }
 
-bool parse_declaration(struct ast_node *node, struct token *tok,
+bool parse_declaration(struct ast_node **node, struct token *tok,
                        const char *sort, size_t len)
 {
   if (!parse_expected(tok, sort, len, TOKEN_DECLARATION)) {
@@ -82,7 +83,7 @@ bool parse_declaration(struct ast_node *node, struct token *tok,
   if (!parse_expected(tok, sort, len, TOKEN_OPENING_BRACE)) {
     return false;
   }
-  if (!parse_vardec(&node, tok, sort, len)) {
+  if (!parse_vardec(node, tok, sort, len)) {
     return false;
   }
   if (!parse_expected(tok, sort, len, TOKEN_CLOSING_BRACE)) {

@@ -28,7 +28,7 @@ void node_init(struct ast_node *node, enum node_type type)
 static inline
 void* node_new(enum node_type type, size_t sz)
 {
-  struct ast_node *node = (struct ast_node*)malloc(sz);
+  struct ast_node *node = (struct ast_node*)calloc(1, sz);
   assert(node != NULL);
   node_init(node, type);
   return node;
