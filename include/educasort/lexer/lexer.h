@@ -5,8 +5,8 @@
  * @version 0.1
  */
 
-#ifndef LEXER_H__
-#define LEXER_H__
+#ifndef EDUCASORT_LEXER_H__
+#define EDUCASORT_LEXER_H__
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -14,7 +14,7 @@
 enum token_type {
   TOKEN_NULL,
 
-  TOKEN_STRING, /* [_a-zA-Z]* */
+  TOKEN_IDENTIFIER, /* [_a-zA-Z]* */
   TOKEN_NUMBER, /* [0-9]* */
   TOKEN_OPENING_PARENT, /* ( */
   TOKEN_CLOSING_PARENT, /* ) */
@@ -54,4 +54,4 @@ bool lexer_token_fill(const char *sort, size_t len, struct token *tok);
  */
 void lexer_token_eat(struct token *tok);
 
-#endif /* !LEXER_H__ */
+#endif /* !EDUCASORT_LEXER_H__ */

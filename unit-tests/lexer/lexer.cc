@@ -47,7 +47,7 @@ static const char* tokentype2str(enum token_type type)
 {
   switch (type) {
     case TOKEN_NULL: return "NULL";
-    case TOKEN_STRING: return "string";
+    case TOKEN_IDENTIFIER: return "identifier";
     case TOKEN_NUMBER: return "number";
     case TOKEN_OPENING_PARENT: return "(";
     case TOKEN_CLOSING_PARENT: return ")";
@@ -130,9 +130,9 @@ TEST_F(Lexer, AlgoSort)
   std::string sort = " FooSort (  A ) ";
 
   const static struct token_list toks[] = {
-    { "FooSort", TOKEN_STRING },
+    { "FooSort", TOKEN_IDENTIFIER },
     { "(", TOKEN_OPENING_PARENT },
-    { "A", TOKEN_STRING },
+    { "A", TOKEN_IDENTIFIER },
     { ")", TOKEN_CLOSING_PARENT },
   };
 
@@ -149,10 +149,10 @@ TEST_F(Lexer, Declaration)
   const static struct token_list toks[] = {
     { "declaration", TOKEN_DECLARATION },
     { "{", TOKEN_OPENING_BRACE },
-    { "i", TOKEN_STRING },
+    { "i", TOKEN_IDENTIFIER },
     { "integer", TOKEN_INTEGER },
     { ",", TOKEN_COMA },
-    { "j", TOKEN_STRING },
+    { "j", TOKEN_IDENTIFIER },
     { "integer", TOKEN_INTEGER },
     { ",", TOKEN_COMA },
     { "}", TOKEN_CLOSING_BRACE },
