@@ -67,7 +67,7 @@ static enum token_type keyword_get(const char *str, size_t len)
 
 #undef KEYWORD
 
-  return TOKEN_STRING;
+  return TOKEN_IDENTIFIER;
 }
 
 static void lexer_string(const char *sort, size_t len, struct token *tok)
