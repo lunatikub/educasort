@@ -40,14 +40,9 @@ void ast_destroy_node(struct ast_node *node)
   ast_destroy_node(node->child);
 
   switch (node->type) {
-    case NODE_SORT:
-      ast_destroy_sort_node(node);
-      break;
-    case NODE_VARDEC:
-      ast_destroy_vardec_node(node);
-      break;
-    default:
-      break;
+    case NODE_SORT: ast_destroy_sort_node(node); break;
+    case NODE_VARDEC: ast_destroy_vardec_node(node); break;
+    default: break;
   };
 }
 

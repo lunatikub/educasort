@@ -7,30 +7,25 @@
  * Parsing the declaration.
  */
 
-#include <stddef.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 #include <educasort/lexer/lexer.h>
 #include <educasort/parser/parser.h>
 
-#include "node.h"
 #include "internal.h"
+#include "node.h"
 
 static bool get_var_type(enum token_type tok_type, enum var_type *var_type)
 {
   switch (tok_type) {
-    case TOKEN_INTEGER:
-      *var_type = VAR_INTEGER;
-      return true;
-    default:
-      return false;
+    case TOKEN_INTEGER: *var_type = VAR_INTEGER; return true;
+    default: return false;
   };
   return false;
 }
 
-static bool
-parse_vardec(struct ast_node **node, struct token *tok,
-             const char *sort, size_t len)
+static bool parse_vardec(struct ast_node **node, struct token *tok, const char *sort, size_t len)
 {
   if (!lexer_token_fill(sort, len, tok)) {
     return false;
@@ -40,8 +35,7 @@ parse_vardec(struct ast_node **node, struct token *tok,
     return true;
   }
 
-  struct ast_vardec *vardec_node =
-    node_new(NODE_VARDEC, sizeof(*vardec_node));
+  struct ast_vardec *vardec_node = node_new(NODE_VARDEC, sizeof(*vardec_node));
   node_set(node, vardec_node);
 
   /* Var name */
@@ -74,8 +68,7 @@ parse_vardec(struct ast_node **node, struct token *tok,
   return false;
 }
 
-bool parse_declaration(struct ast_node **node, struct token *tok,
-                       const char *sort, size_t len)
+bool parse_declaration(struct ast_node **node, struct token *tok, const char *sort, size_t len)
 {
   if (!parse_expected(tok, sort, len, TOKEN_DECLARATION)) {
     return false;

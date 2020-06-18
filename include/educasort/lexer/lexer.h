@@ -8,26 +8,26 @@
 #ifndef EDUCASORT_LEXER_H__
 #define EDUCASORT_LEXER_H__
 
-#include <stddef.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 enum token_type {
   TOKEN_NULL,
 
   TOKEN_IDENTIFIER, /* [_a-zA-Z]* */
-  TOKEN_NUMBER, /* [0-9]* */
+  TOKEN_NUMBER,     /* [0-9]* */
 
   /** Punctuation Marks **/
   TOKEN_OPENING_PARENT, /* ( */
   TOKEN_CLOSING_PARENT, /* ) */
-  TOKEN_OPENING_BRACE, /* { */
-  TOKEN_CLOSING_BRACE, /* } */
-  TOKEN_COMA, /* , */
-  TOKEN_COLON, /* : */
+  TOKEN_OPENING_BRACE,  /* { */
+  TOKEN_CLOSING_BRACE,  /* } */
+  TOKEN_COMA,           /* , */
+  TOKEN_COLON,          /* : */
 
   /** Keywords (cannot be used as string). **/
   TOKEN_DECLARATION, /* declaration */
-  TOKEN_INTEGER, /* integer */
+  TOKEN_INTEGER,     /* integer */
 
   TOKEN_END,
 };
@@ -35,7 +35,7 @@ enum token_type {
 struct token {
   enum token_type type;
   size_t start; /* offset of the token start. */
-  size_t end; /* offset of the token end. */
+  size_t end;   /* offset of the token end. */
   size_t line;
 };
 

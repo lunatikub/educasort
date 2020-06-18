@@ -11,24 +11,21 @@
 #include <assert.h>
 #include <stdlib.h>
 
-static inline
-void node_set(struct ast_node **dst, void *src)
+static inline void node_set(struct ast_node **dst, void *src)
 {
-  *dst = (struct ast_node*)src;
+  *dst = (struct ast_node *)src;
 }
 
-static inline
-void node_init(struct ast_node *node, enum node_type type)
+static inline void node_init(struct ast_node *node, enum node_type type)
 {
   node->next = NULL;
   node->child = NULL;
   node->type = type;
 }
 
-static inline
-void* node_new(enum node_type type, size_t sz)
+static inline void *node_new(enum node_type type, size_t sz)
 {
-  struct ast_node *node = (struct ast_node*)calloc(1, sz);
+  struct ast_node *node = (struct ast_node *)calloc(1, sz);
   assert(node != NULL);
   node_init(node, type);
   return node;

@@ -5,20 +5,18 @@
  * @version 0.1
  */
 
-#include <stdio.h>
 #include <assert.h>
+#include <stdio.h>
 #include <string.h>
 
-#include <educasort/lexer/lexer.h>
 #include "internal.h"
+#include <educasort/lexer/lexer.h>
 
 /* Is it a valid character ? */
 PRIVATE_EXCEPT_UNIT_TEST
 bool is_c(char c)
 {
-  if ((c >= 'a' && c <= 'z') ||
-      (c >= 'A' && c <= 'Z') ||
-      (c == '_')) {
+  if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c == '_')) {
     return true;
   }
   return false;
@@ -37,10 +35,8 @@ bool is_d(char d)
 static void lexer_skip(const char *sort, size_t len, struct token *tok)
 {
   while (tok->start < len &&
-         (sort[tok->start] == ' ' ||
-          sort[tok->start] == '\n' ||
-          sort[tok->start] == '\t')) {
-    if (sort[tok->start] == '\n') {
+         (sort[ tok->start ] == ' ' || sort[ tok->start ] == '\n' || sort[ tok->start ] == '\t')) {
+    if (sort[ tok->start ] == '\n') {
       ++tok->line;
     }
     ++tok->start;
@@ -57,9 +53,8 @@ static void lexer_token_set(struct token *tok, enum token_type type)
 
 static enum token_type keyword_get(const char *str, size_t len)
 {
-#define KEYWORD(STR, TOKEN)                     \
-  if (sizeof(STR) - 1 == len &&                 \
-      strncmp(STR, str, len) == 0)              \
+#define KEYWORD(STR, TOKEN)                                                                        \
+  if (sizeof(STR) - 1 == len && strncmp(STR, str, len) == 0)                                       \
     return TOKEN;
 
   KEYWORD("declaration", TOKEN_DECLARATION);
@@ -75,12 +70,12 @@ static void lexer_string(const char *sort, size_t len, struct token *tok)
   ++tok->end;
   size_t n = tok->end;
 
-  while (n < len && is_c(sort[n])) {
+  while (n < len && is_c(sort[ n ])) {
     ++n;
   }
   tok->end = n;
 
-  tok->type = keyword_get(&sort[tok->start], tok->end - tok->start);
+  tok->type = keyword_get(&sort[ tok->start ], tok->end - tok->start);
 }
 
 static void lexer_number(const char *sort, size_t len, struct token *tok)
@@ -88,7 +83,7 @@ static void lexer_number(const char *sort, size_t len, struct token *tok)
   ++tok->end;
   size_t n = tok->end;
 
-  while (n < len && is_d(sort[n])) {
+  while (n < len && is_d(sort[ n ])) {
     ++n;
   }
 
@@ -105,9 +100,10 @@ bool lexer_token_fill(const char *sort, size_t len, struct token *tok)
     return true;
   }
 
-  char c = sort[tok->start];
+  char c = sort[ tok->start ];
 
-#define CASE(C, TYPE) case C: lexer_token_set(tok, TYPE); return true
+#define CASE(C, TYPE)                                                                              \
+  case C: lexer_token_set(tok, TYPE); return true
   switch (c) {
     CASE('(', TOKEN_OPENING_PARENT);
     CASE(')', TOKEN_CLOSING_PARENT);
@@ -118,7 +114,11 @@ bool lexer_token_fill(const char *sort, size_t len, struct token *tok)
   };
 #undef CASE
 
-#define CASE(COND, NAME) if (COND) { lexer_ ## NAME(sort, len, tok); return true; }
+#define CASE(COND, NAME)                                                                           \
+  if (COND) {                                                                                      \
+    lexer_##NAME(sort, len, tok);                                                                  \
+    return true;                                                                                   \
+  }
   CASE(is_c(c), string);
   CASE(is_d(c), number);
 #undef CASE

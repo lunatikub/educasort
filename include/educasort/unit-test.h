@@ -13,13 +13,13 @@
 
 #ifdef UNIT_TEST_TARGET
 
-  #define PROTOTYPE_FOR_UNIT_TEST(prototype) prototype
-  #define PRIVATE_EXCEPT_UNIT_TEST
+#define PROTOTYPE_FOR_UNIT_TEST(prototype) prototype
+#define PRIVATE_EXCEPT_UNIT_TEST
 
 #else
 
-  #define PROTOTYPE_FOR_UNIT_TEST(prototype)
-  #define PRIVATE_EXCEPT_UNIT_TEST static
+#define PROTOTYPE_FOR_UNIT_TEST(prototype)
+#define PRIVATE_EXCEPT_UNIT_TEST static
 
 #endif
 

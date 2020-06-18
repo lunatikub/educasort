@@ -8,15 +8,13 @@
 #include <educasort/lexer/lexer.h>
 #include <educasort/parser/parser.h>
 
-#include "node.h"
 #include "internal.h"
+#include "node.h"
 
 /**
  * SortName
  */
-static bool
-parse_sort_name(struct ast_sort *node, struct token *tok,
-                const char *sort, size_t len)
+static bool parse_sort_name(struct ast_sort *node, struct token *tok, const char *sort, size_t len)
 {
   if (!lexer_token_fill(sort, len, tok)) {
     return false;
@@ -32,8 +30,7 @@ parse_sort_name(struct ast_sort *node, struct token *tok,
 /**
  * (A)
  */
-static bool
-parse_A(struct token *tok, const char *sort, size_t len)
+static bool parse_A(struct token *tok, const char *sort, size_t len)
 {
   /* ( */
   if (!parse_expected(tok, sort, len, TOKEN_OPENING_PARENT)) {
@@ -64,8 +61,7 @@ parse_A(struct token *tok, const char *sort, size_t len)
  *   declaration { ... }
  * }
  */
-static bool parse_sort(struct ast_node *root, struct token *tok,
-                       const char *sort, size_t len)
+static bool parse_sort(struct ast_node *root, struct token *tok, const char *sort, size_t len)
 {
   struct ast_sort *node = node_new(NODE_SORT, sizeof(*node));
   node_set(&root->child, node);
