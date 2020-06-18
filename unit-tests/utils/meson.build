@@ -1,6 +1,7 @@
 test_utils_src = files(
   'main.cc',
   'string.cc',
+  'file.cc',
 )
 
 unit_test_utils = executable(
@@ -27,3 +28,9 @@ run_target(
 )
 
 test('unit-test-utils', unit_test_utils)
+
+configure_file(
+  input: 'test.txt',
+  output: 'test.txt',
+  copy: true,
+)
