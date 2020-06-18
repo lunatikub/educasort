@@ -91,6 +91,7 @@ educasort_inc = include_directories('include', '.')
 # List of modules.
 # Order can matter according to dependencies.
 modules = [
+  'utils',
   'lexer',
   'parser',
   'visitor',

@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 
-#include <educasort/utils.h>
+#include <educasort/utils/utils.h>
 
 /**
  * Enumeration of node type.
