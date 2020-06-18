@@ -35,8 +35,8 @@ bool is_d(char d)
 static void lexer_skip(const char *sort, size_t len, struct token *tok)
 {
   while (tok->start < len &&
-         (sort[ tok->start ] == ' ' || sort[ tok->start ] == '\n' || sort[ tok->start ] == '\t')) {
-    if (sort[ tok->start ] == '\n') {
+         (sort[tok->start] == ' ' || sort[tok->start] == '\n' || sort[tok->start] == '\t')) {
+    if (sort[tok->start] == '\n') {
       ++tok->line;
     }
     ++tok->start;
@@ -70,12 +70,12 @@ static void lexer_string(const char *sort, size_t len, struct token *tok)
   ++tok->end;
   size_t n = tok->end;
 
-  while (n < len && is_c(sort[ n ])) {
+  while (n < len && is_c(sort[n])) {
     ++n;
   }
   tok->end = n;
 
-  tok->type = keyword_get(&sort[ tok->start ], tok->end - tok->start);
+  tok->type = keyword_get(&sort[tok->start], tok->end - tok->start);
 }
 
 static void lexer_number(const char *sort, size_t len, struct token *tok)
@@ -83,7 +83,7 @@ static void lexer_number(const char *sort, size_t len, struct token *tok)
   ++tok->end;
   size_t n = tok->end;
 
-  while (n < len && is_d(sort[ n ])) {
+  while (n < len && is_d(sort[n])) {
     ++n;
   }
 
@@ -100,7 +100,7 @@ bool lexer_token_fill(const char *sort, size_t len, struct token *tok)
     return true;
   }
 
-  char c = sort[ tok->start ];
+  char c = sort[tok->start];
 
 #define CASE(C, TYPE)                                                                              \
   case C: lexer_token_set(tok, TYPE); return true

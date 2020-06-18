@@ -5,6 +5,7 @@ test_visitor_src = files(
 unit_test_visitor = executable(
   'unit-test-visitor',
   test_visitor_src,
+  utils_src,
   lexer_src,
   parser_src,
   visitor_src,

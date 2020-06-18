@@ -12,7 +12,7 @@
 
 static inline char *token_strndup(const char *sort, const struct token *tok)
 {
-  return strndup(&sort[ tok->start ], tok->end - tok->start);
+  return strndup(&sort[tok->start], tok->end - tok->start);
 }
 
 static inline int token_strncmp(const struct token *tok, const char *sort, const char *str,

@@ -8,6 +8,8 @@
 #ifndef EDUCASORT_STRING_H__
 #define EDUCASORT_STRING_H__
 
+#include <stddef.h>
+
 /** Opaque string structure. **/
 typedef struct string string_t;
 
@@ -17,7 +19,7 @@ typedef struct string string_t;
  * @param initial_capa Initial length capacity of the string.
  * @return string allocated.
  */
-string_t* string_create(size_t initial_capa);
+string_t *string_create(size_t initial_capa);
 
 /**
  * Destroy a string.
@@ -40,6 +42,6 @@ void string_append(struct string *dst, const char *src);
  * @param String previously allocated with @c string_create.
  * @return string
  */
-const char* string_get(const struct string *str);
+const char *string_get(const struct string *str);
 
 #endif /* !EDUCASORT_STRING_H__ */

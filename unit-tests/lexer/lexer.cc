@@ -77,7 +77,7 @@ bool Lexer::TokEq(const std::string &sort, const std::string &str, enum token_ty
 void Lexer::Test(const std::string &sort, const struct token_list *toks, size_t sz)
 {
   const struct token_list *iter;
-  for (iter = &toks[ 0 ]; iter != &toks[ sz ]; ++iter) {
+  for (iter = &toks[0]; iter != &toks[sz]; ++iter) {
     ASSERT_TRUE(lexer_token_fill(sort.c_str(), sort.length(), &tok));
     ASSERT_TRUE(TokEq(sort, iter->str, iter->type))
       << "Lexer test error: '" << iter->str << std::endl;
@@ -87,7 +87,7 @@ void Lexer::Test(const std::string &sort, const struct token_list *toks, size_t 
   ASSERT_EQ(tok.type, TOKEN_END) << "Lexer test error: expected end" << std::endl;
 }
 
-#define TOKS_SZ(TOKS) (sizeof(TOKS) / sizeof(TOKS[ 0 ]))
+#define TOKS_SZ(TOKS) (sizeof(TOKS) / sizeof(TOKS[0]))
 
 /**
  * Test @c is_c function.
