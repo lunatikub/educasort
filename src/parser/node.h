@@ -11,6 +11,8 @@
 #include <assert.h>
 #include <stdlib.h>
 
+#include <educasort/parser/ast.h>
+
 static inline void node_set(struct ast_node **dst, void *src)
 {
   *dst = (struct ast_node *)src;

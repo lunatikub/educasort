@@ -93,6 +93,7 @@ educasort_inc = include_directories('include', '.')
 modules = [
   'lexer',
   'parser',
+  'visitor',
 ]
 
 # Add sources and unit tests (if exist) for each module.

@@ -75,6 +75,9 @@ static bool parse_sort(struct ast_node *root, struct token *tok, const char *sor
   if (!parse_expected(tok, sort, len, TOKEN_OPENING_BRACE)) {
     return false;
   }
+  if (!parse_declaration(&node->node.next, tok, sort, len)) {
+    return false;
+  }
   if (!parse_expected(tok, sort, len, TOKEN_CLOSING_BRACE)) {
     return false;
   }

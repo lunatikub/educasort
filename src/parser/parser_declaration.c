@@ -70,9 +70,18 @@ static bool parse_vardec(struct ast_node **node, struct token *tok, const char *
 
 bool parse_declaration(struct ast_node **node, struct token *tok, const char *sort, size_t len)
 {
-  if (!parse_expected(tok, sort, len, TOKEN_DECLARATION)) {
+  if (!lexer_token_fill(sort, len, tok)) {
     return false;
   }
+  /* Empty declaration */
+  if (tok->type == TOKEN_CLOSING_BRACE) {
+    return true;
+  }
+  if (tok->type != TOKEN_DECLARATION) {
+    return false;
+  }
+  lexer_token_eat(tok);
+
   if (!parse_expected(tok, sort, len, TOKEN_OPENING_BRACE)) {
     return false;
   }

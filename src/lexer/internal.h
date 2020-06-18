@@ -8,6 +8,8 @@
 #ifndef LEXER_INTERNAL_H__
 #define LEXER_INTERNAL_H__
 
+#include <stdbool.h>
+
 #include <educasort/unit-test.h>
 
 PROTOTYPE_FOR_UNIT_TEST(bool is_c(char c));
