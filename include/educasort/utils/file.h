@@ -9,6 +9,7 @@
 #define EDUCASORT_FILE_H__
 
 #include <stdbool.h>
+#include <stddef.h>
 
 /**
  * Reading an entire file into memory.

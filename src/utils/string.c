@@ -20,17 +20,19 @@ struct string {
   size_t capa;
 };
 
-PRIVATE_EXCEPT_UNIT_TEST
+#ifdef UNIT_TEST_TARGET
+
 size_t string_capa(const struct string *str)
 {
   return str->capa;
 }
 
-PRIVATE_EXCEPT_UNIT_TEST
 size_t string_len(const struct string *str)
 {
   return str->len;
 }
+
+#endif
 
 const char *string_get(const struct string *str)
 {

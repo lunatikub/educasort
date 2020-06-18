@@ -105,3 +105,16 @@ foreach module : modules
     subdir(unit_test_dir)
   endif
 endforeach
+
+
+#################
+## Application ##
+#################
+
+applications = [
+  'algo_style',
+]
+
+foreach app : applications
+  subdir(join_paths('app', app))
+endforeach
