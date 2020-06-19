@@ -29,9 +29,9 @@ static bool parse_input(struct ast *root, struct token *tok, const char *sort, s
   if (!parse_expected(tok, sort, len, TOKEN_OPENING_PARENT)) {
     return false;
   }
-
-  (void)root;
-
+  if (!parse_list_vardec(&root->input, tok, sort, len)) {
+    return false;
+  }
   /* ) */
   if (!parse_expected(tok, sort, len, TOKEN_CLOSING_PARENT)) {
     return false;

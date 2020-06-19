@@ -75,10 +75,6 @@ bool Lexer::TokEq(const std::string &sort, const std::string &str, enum token_ty
 
 #define TOKS_SZ(TOKS) (sizeof(TOKS) / sizeof(TOKS[0]))
 
-/**
- * Test @c is_c function.
- * Allowed char: [_a-zA-z]
- */
 TEST_F(Lexer, isChar)
 {
   EXPECT_TRUE(is_c('a'));
@@ -88,10 +84,6 @@ TEST_F(Lexer, isChar)
   EXPECT_FALSE(is_c('['));
 }
 
-/**
- * Test @c is_d function.
- * Allowed char: [0-9]
- */
 TEST_F(Lexer, isDigit)
 {
   EXPECT_TRUE(is_d('0'));
@@ -100,9 +92,6 @@ TEST_F(Lexer, isDigit)
   EXPECT_FALSE(is_c('['));
 }
 
-/**
- * Test token lexing.
- */
 TEST_F(Lexer, AllowedToken)
 {
   std::string algo = " FooSort (  A ) Bar : integer , : { }} , declaration";
@@ -135,9 +124,6 @@ TEST_F(Lexer, AllowedToken)
   ASSERT_EQ(tok.type, TOKEN_END) << "Lexer test error: expected end" << std::endl;
 }
 
-/**
- * Test NULL token.
- */
 TEST_F(Lexer, TokenNULL)
 {
   std::string algo;
