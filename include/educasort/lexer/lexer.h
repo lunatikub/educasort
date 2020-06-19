@@ -22,7 +22,7 @@ enum token_type {
   TOKEN_CLOSING_PARENT, /* ) */
   TOKEN_OPENING_BRACE,  /* { */
   TOKEN_CLOSING_BRACE,  /* } */
-  TOKEN_COMA,           /* , */
+  TOKEN_COMMA,          /* , */
   TOKEN_COLON,          /* : */
 
   /** Keywords (cannot be used as string). **/

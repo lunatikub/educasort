@@ -32,12 +32,45 @@ Basics
                  ;
 
                identifier =
-                 letter , { letter | '_' }
+                 letter { letter | '_' }
                  ;
 
                number =
-                 [ '-' ], digit, { digit }
+                 [ '-' ] digit { digit }
                  ;
+
+-----------
+
+Type
+****
+
+.. code-block:: ebnf
+
+                type =
+                  'integer' |
+                  'array'
+                  ;
+
+-----------
+
+Variable declaration
+********************
+
+.. code-block:: ebnf
+
+                list_vardec =
+                  vardec { ',' vardec }
+                  ;
+                
+                vardec =
+                  empty |
+                  identifer ':' type
+                  ;
+
+.. code-block:: text
+
+                i:integer,
+                j:integer
                   
 -----------
 
@@ -47,15 +80,13 @@ Sort
 .. code-block:: ebnf
 
                 sort =
-                  identifier, '(', 'A', ')', '{',
-                    [ declaration ]
-                  '}'
+                  identifier '(' list_vardec ')' '{' [ declaration ] '}'
                   ;
                   
 .. code-block:: text
 
-                SortNameFoo(A) {
-                  declaration { ... }
+                SortNameFoo(...) {
+                  ...
                 }
 
 -----------
@@ -66,19 +97,14 @@ Declaration
 .. code-block:: ebnf
 
                 declaration =
-                  'declaration', '{', { identifier, ':', type ',' } '}'
+                  'declaration' '{' list_vardec '}'
                   ;
-                
-                type =
-                  'integer'
-                  ;
-                   
+                                   
 .. code-block:: text
 
-           declaration {
-             i:integer,
-             j:integer,
-           }
+                declaration {
+                  ...
+                }
 
 -----------
            
@@ -87,27 +113,4 @@ Implemenation
 
 TODO
 
------------
                  
-Example
-*******
-
-.. code-block:: text
-
-                bubbleSort(A)
-                {
-                  declaration {
-                    i integer,
-                    j integer,
-                  }
-                  
-                  implementation {
-                    for i <- sizeof(A) - 1 to 1 by -1 {
-                      for j <- 0 to i - 1 by 1 {    
-                        if T[j + 1] < T[j] { 
-                          swap T[j], T[j + 1]
-                        }
-                      }
-                    }
-                  }
-                }

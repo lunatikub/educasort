@@ -14,6 +14,7 @@ struct visitor_style {
   struct visitor visitor;
   int indent;
   string_t *algo;
+  bool first_vardec;
 };
 
 /**

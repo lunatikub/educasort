@@ -21,21 +21,25 @@ TEST_F(Visitor, Style)
   struct visitor_style vs;
   struct ast ast;
 
-  std::string sort = "FooSort(A) { declaration{i:integer,j : integer,} }";
+  std::string sort = "FooSort() { declaration{i:integer,j : integer} }";
   EXPECT_TRUE(parse(&ast, sort.c_str(), sort.length()));
 
   visitor_style_init(&vs);
   visit(&ast, &vs.visitor);
 
   std::string expected = "\
-FooSort(A) {\n\
+FooSort() {\n\
   declaration {\n\
     i:integer,\n\
-    j:integer,\n\
+    j:integer\n\
   }\n\
 }";
 
-  EXPECT_TRUE(strcmp(expected.c_str(), string_get(vs.algo)) == 0);
+  EXPECT_TRUE(strcmp(expected.c_str(), string_get(vs.algo)) == 0)
+    << "expected: " << std::endl
+    << expected << std::endl
+    << "result: " << std::endl
+    << string_get(vs.algo) << std::endl;
 
   visitor_style_clean(&vs);
   ast_destroy(&ast);

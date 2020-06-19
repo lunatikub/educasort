@@ -10,7 +10,6 @@ protected:
   virtual void SetUp(void);
   virtual void TearDown(void);
 
-  void Test(const std::string &sort, const struct token_list *toks, size_t sz);
   bool TokEq(const std::string &sort, const std::string &str, enum token_type type);
 
   struct token tok;
@@ -48,7 +47,7 @@ static const char *tokentype2str(enum token_type type)
     case TOKEN_CLOSING_PARENT: return ")";
     case TOKEN_OPENING_BRACE: return "{";
     case TOKEN_CLOSING_BRACE: return "}";
-    case TOKEN_COMA: return ",";
+    case TOKEN_COMMA: return ",";
     case TOKEN_COLON: return ":";
     case TOKEN_DECLARATION: return "declaration";
     case TOKEN_INTEGER: return "integer";
@@ -72,19 +71,6 @@ bool Lexer::TokEq(const std::string &sort, const std::string &str, enum token_ty
                             << "result: " << tokentype2str(tok.type) << std::endl;
 
   return s == str && type == tok.type;
-}
-
-void Lexer::Test(const std::string &sort, const struct token_list *toks, size_t sz)
-{
-  const struct token_list *iter;
-  for (iter = &toks[0]; iter != &toks[sz]; ++iter) {
-    ASSERT_TRUE(lexer_token_fill(sort.c_str(), sort.length(), &tok));
-    ASSERT_TRUE(TokEq(sort, iter->str, iter->type))
-      << "Lexer test error: '" << iter->str << std::endl;
-    lexer_token_eat(&tok);
-  }
-  ASSERT_TRUE(lexer_token_fill(sort.c_str(), sort.length(), &tok));
-  ASSERT_EQ(tok.type, TOKEN_END) << "Lexer test error: expected end" << std::endl;
 }
 
 #define TOKS_SZ(TOKS) (sizeof(TOKS) / sizeof(TOKS[0]))
@@ -115,44 +101,38 @@ TEST_F(Lexer, isDigit)
 }
 
 /**
- * Test sort lexing.
+ * Test token lexing.
  */
-TEST_F(Lexer, AlgoSort)
+TEST_F(Lexer, AllowedToken)
 {
-  std::string sort = " FooSort (  A ) ";
+  std::string algo = " FooSort (  A ) Bar : integer , : { }} , declaration";
 
   const static struct token_list toks[] = {
     { "FooSort", TOKEN_IDENTIFIER },
     { "(", TOKEN_OPENING_PARENT },
     { "A", TOKEN_IDENTIFIER },
     { ")", TOKEN_CLOSING_PARENT },
-  };
-
-  Test(sort, toks, TOKS_SZ(toks));
-}
-
-/**
- * Test declaration lexing.
- */
-TEST_F(Lexer, Declaration)
-{
-  std::string sort = "declaration { i : integer, j: integer, }";
-
-  const static struct token_list toks[] = {
-    { "declaration", TOKEN_DECLARATION },
+    { "Bar", TOKEN_IDENTIFIER },
+    { ":", TOKEN_COLON },
+    { "integer", TOKEN_INTEGER },
+    { ",", TOKEN_COMMA },
+    { ":", TOKEN_COLON },
     { "{", TOKEN_OPENING_BRACE },
-    { "i", TOKEN_IDENTIFIER },
-    { ":", TOKEN_COLON },
-    { "integer", TOKEN_INTEGER },
-    { ",", TOKEN_COMA },
-    { "j", TOKEN_IDENTIFIER },
-    { ":", TOKEN_COLON },
-    { "integer", TOKEN_INTEGER },
-    { ",", TOKEN_COMA },
     { "}", TOKEN_CLOSING_BRACE },
+    { "}", TOKEN_CLOSING_BRACE },
+    { ",", TOKEN_COMMA },
+    { "declaration", TOKEN_DECLARATION },
   };
 
-  Test(sort, toks, TOKS_SZ(toks));
+  const struct token_list *iter;
+  for (iter = &toks[0]; iter != &toks[TOKS_SZ(toks)]; ++iter) {
+    ASSERT_TRUE(lexer_token_fill(algo.c_str(), algo.length(), &tok));
+    ASSERT_TRUE(TokEq(algo, iter->str, iter->type))
+      << "Lexer test error: '" << iter->str << std::endl;
+    lexer_token_eat(&tok);
+  }
+  ASSERT_TRUE(lexer_token_fill(algo.c_str(), algo.length(), &tok));
+  ASSERT_EQ(tok.type, TOKEN_END) << "Lexer test error: expected end" << std::endl;
 }
 
 /**
@@ -160,7 +140,9 @@ TEST_F(Lexer, Declaration)
  */
 TEST_F(Lexer, TokenNULL)
 {
-  std::string sort = "- foo";
-  ASSERT_FALSE(lexer_token_fill(sort.c_str(), sort.length(), &tok));
+  std::string algo;
+
+  algo = "- foo";
+  ASSERT_FALSE(lexer_token_fill(algo.c_str(), algo.length(), &tok));
   EXPECT_EQ(tok.type, TOKEN_NULL);
 }

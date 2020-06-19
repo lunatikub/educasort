@@ -26,8 +26,16 @@ static inline bool parse_expected(struct token *tok, const char *sort, size_t le
   return true;
 }
 
-bool parse_declaration(struct ast_node **node, struct token *tok, const char *sort, size_t len);
+/**
+ * Parse a declaration block.
+ */
+bool parse_declaration(struct ast_vardec **vardec, struct token *tok, const char *sort, size_t len);
 
-PROTOTYPE_FOR_UNIT_TEST(void ast_destroy_node(struct ast_node *node));
+/**
+ * Parse a variable list declaration.
+ */
+bool parse_list_vardec(struct ast_vardec **vardec, struct token *tok, const char *sort, size_t len);
+
+PROTOTYPE_FOR_UNIT_TEST(void ast_destroy_vardec(struct ast_vardec *vardec));
 
 #endif /* !PARSER_INTERNAL_H__ */

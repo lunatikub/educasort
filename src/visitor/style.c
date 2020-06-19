@@ -35,34 +35,40 @@ static void v_style_declaration_start(const struct visitor *visitor)
   indent(vs->algo, vs->indent);
   string_append(vs->algo, "declaration {\n");
   vs->indent += INDENT_W;
+  vs->first_vardec = true;
 }
 
 static void v_style_declaration_end(const struct visitor *visitor)
 {
   struct visitor_style *vs = v_style_get(visitor);
+  string_append(vs->algo, "\n");
   vs->indent -= INDENT_W;
   indent(vs->algo, vs->indent);
   string_append(vs->algo, "}\n");
 }
 
-static void v_style_vardec(const struct visitor *visitor, const struct ast_vardec *vardec_node)
+static void v_style_vardec(const struct visitor *visitor, const struct ast_vardec *vardec)
 {
   struct visitor_style *vs = v_style_get(visitor);
 
+  if (!vs->first_vardec) {
+    string_append(vs->algo, ",\n");
+  }
+
   indent(vs->algo, vs->indent);
-  string_append(vs->algo, vardec_node->name);
+  string_append(vs->algo, vardec->name);
   string_append(vs->algo, ":");
-  string_append(vs->algo, get_var_type(vardec_node->type));
-  string_append(vs->algo, ",\n");
+  string_append(vs->algo, get_var_type(vardec->type));
+  vs->first_vardec = false;
 }
 
-static void v_style_sort(const struct visitor *visitor, const struct ast_sort *sort_node)
+static void v_style_sort(const struct visitor *visitor, const struct ast *root)
 {
   struct visitor_style *vs = v_style_get(visitor);
 
   indent(vs->algo, vs->indent);
-  string_append(vs->algo, sort_node->name);
-  string_append(vs->algo, "(A) {\n");
+  string_append(vs->algo, root->name);
+  string_append(vs->algo, "() {\n");
   vs->indent += INDENT_W;
 }
 

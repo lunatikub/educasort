@@ -24,12 +24,12 @@ struct visitor {
   /**
    * Sort.
    */
-  void (*sort)(const struct visitor *visitor, const struct ast_sort *sort_node);
+  void (*sort)(const struct visitor *visitor, const struct ast *root);
   /**
    * Declaration.
    */
   void (*declaration_start)(const struct visitor *visitor);
-  void (*vardec)(const struct visitor *visitor, const struct ast_vardec *vardec_node);
+  void (*vardec)(const struct visitor *visitor, const struct ast_vardec *vardec);
   void (*declaration_end)(const struct visitor *visitor);
 };
 
