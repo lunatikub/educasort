@@ -90,7 +90,7 @@ TEST_F(Parser, Declaration)
   struct token tok;
 
   token_init(&tok);
-  sort = "declaration { i:integer, j:integer, }";
+  sort = "declaration { i:integer, j:integer }";
   EXPECT_TRUE(parse_declaration(NEXT_NODE(node), &tok, sort.c_str(), sort.length()));
   EXPECT_EQ(node->node.child, NULL_NODE);
   EXPECT_NE(node->node.next, NULL_NODE);
@@ -144,7 +144,7 @@ TEST_F(Parser, DeclarationSyntaxErr)
   node = (struct ast_sort *)node_new(NODE_SORT, sizeof(*node));
   node->name = strdup("foo");
   token_init(&tok);
-  sort = "declaration { i:integer }";
+  sort = "declaration { i:integer j:integer }";
   EXPECT_FALSE(parse_declaration(NEXT_NODE(node), &tok, sort.c_str(), sort.length()));
   ast_destroy_node((struct ast_node *)node);
 }

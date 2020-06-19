@@ -60,6 +60,10 @@ static bool parse_vardec(struct ast_node **node, struct token *tok, const char *
   lexer_token_eat(tok);
 
   lexer_token_fill(sort, len, tok);
+  /* Empty declaration. */
+  if (tok->type == TOKEN_CLOSING_BRACE) {
+    return true;
+  }
   /* New vardec. */
   if (tok->type == TOKEN_COMA) {
     lexer_token_eat(tok);
