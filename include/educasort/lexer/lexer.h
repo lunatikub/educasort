@@ -17,7 +17,7 @@ enum token_type {
   TOKEN_IDENTIFIER, /* [_a-zA-Z]* */
   TOKEN_NUMBER,     /* [0-9]* */
 
-  /** Punctuation Marks **/
+  /** Punctuations **/
   TOKEN_OPENING_PARENT, /* ( */
   TOKEN_CLOSING_PARENT, /* ) */
   TOKEN_OPENING_BRACE,  /* { */
@@ -25,7 +25,13 @@ enum token_type {
   TOKEN_COMMA,          /* , */
   TOKEN_COLON,          /* : */
 
-  /** Keywords (cannot be used as string). **/
+  /** Maths **/
+  TOKEN_PLUS, /* + */
+  TOKEN_MINUS, /* - */
+  TOKEN_ASTERISK, /* * */
+  TOKEN_SLASH, /* / */
+
+  /** Keywords (cannot be used as identifier). **/
   TOKEN_DECLARATION, /* declaration */
   TOKEN_INTEGER,     /* integer */
 

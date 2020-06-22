@@ -20,12 +20,19 @@ enum var_type {
 };
 
 /**
- * Variable declaration node.
+ * Variable.
+ */
+struct ast_var {
+  enum var_type type;
+  char *name;
+};
+
+/**
+ * List of variable declaration node.
  */
 struct ast_vardec {
   struct ast_vardec *next;
-  char *name;
-  enum var_type type;
+  struct ast_var var;
 };
 
 /**

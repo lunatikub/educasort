@@ -56,9 +56,9 @@ static void v_style_vardec(const struct visitor *visitor, const struct ast_varde
   }
 
   indent(vs->algo, vs->indent);
-  string_append(vs->algo, vardec->name);
+  string_append(vs->algo, vardec->var.name);
   string_append(vs->algo, ":");
-  string_append(vs->algo, get_var_type(vardec->type));
+  string_append(vs->algo, get_var_type(vardec->var.type));
   vs->first_vardec = false;
 }
 

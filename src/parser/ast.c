@@ -20,8 +20,8 @@ void ast_destroy_vardec(struct ast_vardec *vardec)
   if (vardec->next != NULL) {
     ast_destroy_vardec(vardec->next);
   }
-  if (vardec->name != NULL) {
-    free(vardec->name);
+  if (vardec->var.name != NULL) {
+    free(vardec->var.name);
   }
   free(vardec);
 }

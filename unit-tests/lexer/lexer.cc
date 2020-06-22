@@ -49,6 +49,10 @@ static const char *tokentype2str(enum token_type type)
     case TOKEN_CLOSING_BRACE: return "}";
     case TOKEN_COMMA: return ",";
     case TOKEN_COLON: return ":";
+    case TOKEN_PLUS: return "+";
+    case TOKEN_MINUS: return "-";
+    case TOKEN_SLASH: return "/";
+    case TOKEN_ASTERISK: return "*";
     case TOKEN_DECLARATION: return "declaration";
     case TOKEN_INTEGER: return "integer";
     case TOKEN_END: return "end";
@@ -94,13 +98,17 @@ TEST_F(Lexer, isDigit)
 
 TEST_F(Lexer, AllowedToken)
 {
-  std::string algo = " FooSort (  A ) Bar : integer , : { }} , declaration";
+  std::string algo = " FooSort (  A ) +-/* Bar : integer , : { }} , declaration";
 
   const static struct token_list toks[] = {
     { "FooSort", TOKEN_IDENTIFIER },
     { "(", TOKEN_OPENING_PARENT },
     { "A", TOKEN_IDENTIFIER },
     { ")", TOKEN_CLOSING_PARENT },
+    { "+", TOKEN_PLUS },
+    { "-", TOKEN_MINUS },
+    { "/", TOKEN_SLASH },
+    { "*", TOKEN_ASTERISK },
     { "Bar", TOKEN_IDENTIFIER },
     { ":", TOKEN_COLON },
     { "integer", TOKEN_INTEGER },
@@ -128,7 +136,7 @@ TEST_F(Lexer, TokenNULL)
 {
   std::string algo;
 
-  algo = "- foo";
+  algo = "@";
   ASSERT_FALSE(lexer_token_fill(algo.c_str(), algo.length(), &tok));
   EXPECT_EQ(tok.type, TOKEN_NULL);
 }

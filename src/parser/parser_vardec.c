@@ -37,7 +37,7 @@ static bool parse_vardec(struct ast_vardec **vardec, struct token *tok, const ch
   if (tok->type != TOKEN_IDENTIFIER) {
     return false;
   }
-  vd->name = token_strndup(sort, tok);
+  vd->var.name = token_strndup(sort, tok);
   lexer_token_eat(tok);
 
   /* : */
@@ -49,7 +49,7 @@ static bool parse_vardec(struct ast_vardec **vardec, struct token *tok, const ch
   if (!lexer_token_fill(sort, len, tok)) {
     return false;
   }
-  if (!get_var_type(tok->type, &vd->type)) {
+  if (!get_var_type(tok->type, &vd->var.type)) {
     return false;
   }
   lexer_token_eat(tok);

@@ -46,12 +46,12 @@ TEST_F(Parser, ListVarDec)
 
   EXPECT_TRUE(parse_list_vardec(&vardec, &tok, algo.c_str(), algo.length()));
 
-  EXPECT_EQ(strcmp(vardec->name, "i"), 0);
-  EXPECT_EQ(vardec->type, VAR_INTEGER);
+  EXPECT_EQ(strcmp(vardec->var.name, "i"), 0);
+  EXPECT_EQ(vardec->var.type, VAR_INTEGER);
   ASSERT_NE(vardec->next, nullptr);
   struct ast_vardec *next = vardec->next;
-  EXPECT_EQ(strcmp(next->name, "j"), 0);
-  EXPECT_EQ(next->type, VAR_INTEGER);
+  EXPECT_EQ(strcmp(next->var.name, "j"), 0);
+  EXPECT_EQ(next->var.type, VAR_INTEGER);
 
   ast_destroy_vardec(vardec);
 
@@ -97,12 +97,12 @@ TEST_F(Parser, SortInput)
   EXPECT_EQ(strcmp(ast.name, "bar"), 0);
   struct ast_vardec *first = ast.input;
   ASSERT_NE(first, nullptr);
-  EXPECT_EQ(strcmp(first->name, "foo"), 0);
-  EXPECT_EQ(first->type, VAR_INTEGER);
+  EXPECT_EQ(strcmp(first->var.name, "foo"), 0);
+  EXPECT_EQ(first->var.type, VAR_INTEGER);
   ASSERT_NE(first->next, nullptr);
   struct ast_vardec *second = first->next;
-  EXPECT_EQ(strcmp(second->name, "foo_"), 0);
-  EXPECT_EQ(second->type, VAR_INTEGER);
+  EXPECT_EQ(strcmp(second->var.name, "foo_"), 0);
+  EXPECT_EQ(second->var.type, VAR_INTEGER);
   EXPECT_EQ(second->next, nullptr);
 }
 
@@ -132,12 +132,12 @@ TEST_F(Parser, Declaration)
 
   EXPECT_TRUE(parse_declaration(&vardec, &tok, algo.c_str(), algo.length()));
 
-  EXPECT_EQ(strcmp(vardec->name, "i"), 0);
-  EXPECT_EQ(vardec->type, VAR_INTEGER);
+  EXPECT_EQ(strcmp(vardec->var.name, "i"), 0);
+  EXPECT_EQ(vardec->var.type, VAR_INTEGER);
   ASSERT_NE(vardec->next, nullptr);
   struct ast_vardec *next = vardec->next;
-  EXPECT_EQ(strcmp(next->name, "j"), 0);
-  EXPECT_EQ(next->type, VAR_INTEGER);
+  EXPECT_EQ(strcmp(next->var.name, "j"), 0);
+  EXPECT_EQ(next->var.type, VAR_INTEGER);
   EXPECT_EQ(next->next, nullptr);
 
   ast_destroy_vardec(vardec);

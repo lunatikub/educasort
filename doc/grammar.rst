@@ -31,7 +31,7 @@ Basics
                  '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
                  ;
 
-               identifier =
+               id =
                  letter { letter | '_' }
                  ;
 
@@ -51,6 +51,27 @@ Type
                   'array'
                   ;
 
+-----------
+
+Expr
+****
+
+.. code-block:: ebnf
+
+                expr =
+                  id '*' expr |
+                  id '+' expr |
+                  id '-' expr |
+                  id '/' expr |
+                  '(' expr ')' |
+                  id |
+                  number
+                  ;
+
+.. code-block:: text
+
+                1 + (L * 2)
+                  
 -----------
 
 Variable declaration
@@ -80,7 +101,7 @@ Sort
 .. code-block:: ebnf
 
                 sort =
-                  identifier '(' list_vardec ')' '{' [ declaration ] '}'
+                  id '(' list_vardec ')' '{' [ declaration ] '}'
                   ;
                   
 .. code-block:: text
@@ -111,6 +132,12 @@ Declaration
 Implemenation
 *************
 
-TODO
+Assignment
+==========
 
-                 
+.. code-block:: ebnf
+
+                assignment =
+                  id '<-' expr
+                  ;
+                
