@@ -5,16 +5,25 @@
  * @version 0.1
  */
 
+#include <stdlib.h>
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
 
 #include "internal.h"
 #include <educasort/lexer/lexer.h>
 
-/* Is it a valid character ? */
-PRIVATE_EXCEPT_UNIT_TEST
-bool is_c(char c)
+static struct token* token_new(struct token_list *tl, size_t offset)
+{
+  struct token *t = calloc(1, sizeof(*t));
+  assert(t != NULL);
+  t->start = offset;
+  t->tl = tl;
+  return t;
+}
+
+static bool is_c(char c)
 {
   if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c == '_')) {
     return true;
@@ -22,9 +31,7 @@ bool is_c(char c)
   return false;
 }
 
-/* Is it a valid digit ? */
-PRIVATE_EXCEPT_UNIT_TEST
-bool is_d(char d)
+static bool is_d(char d)
 {
   if (d >= '0' && d <= '9') {
     return true;
@@ -32,11 +39,11 @@ bool is_d(char d)
   return false;
 }
 
-static void lexer_skip(const char *sort, size_t len, struct token *tok)
+static void skip(const char *algo, size_t len, struct token *tok)
 {
   while (tok->start < len &&
-         (sort[tok->start] == ' ' || sort[tok->start] == '\n' || sort[tok->start] == '\t')) {
-    if (sort[tok->start] == '\n') {
+         (algo[tok->start] == ' ' || algo[tok->start] == '\n' || algo[tok->start] == '\t')) {
+    if (algo[tok->start] == '\n') {
       ++tok->line;
     }
     ++tok->start;
@@ -45,45 +52,49 @@ static void lexer_skip(const char *sort, size_t len, struct token *tok)
   tok->end = tok->start;
 }
 
-static void lexer_token_set(struct token *tok, enum token_type type)
+static bool keyword_eq(const char *keyword, const char *str, size_t len)
 {
-  tok->type = type;
-  ++tok->end;
+  size_t keyword_len = strlen(keyword);
+
+  if (len != keyword_len) {
+    return false;
+  }
+  if (strncmp(keyword, str, len) == 0) {
+    return true;
+  }
+  return false;
 }
 
 static enum token_type keyword_get(const char *str, size_t len)
 {
-#define KEYWORD(STR, TOKEN)                                                                        \
-  if (sizeof(STR) - 1 == len && strncmp(STR, str, len) == 0)                                       \
-    return TOKEN;
-
-  KEYWORD("declaration", TOKEN_DECLARATION);
-  KEYWORD("integer", TOKEN_INTEGER);
-
-#undef KEYWORD
-
+  if (keyword_eq("declaration", str, len)) {
+    return TOKEN_DECLARATION;
+  }
+  if (keyword_eq("integer", str, len)) {
+    return TOKEN_TYPE_INTEGER;
+  }
   return TOKEN_IDENTIFIER;
 }
 
-static void lexer_string(const char *sort, size_t len, struct token *tok)
+static void token_string(const char *algo, size_t len, struct token *tok)
 {
   ++tok->end;
   size_t n = tok->end;
 
-  while (n < len && is_c(sort[n])) {
+  while (n < len && is_c(algo[n])) {
     ++n;
   }
   tok->end = n;
 
-  tok->type = keyword_get(&sort[tok->start], tok->end - tok->start);
+  tok->type = keyword_get(&algo[tok->start], tok->end - tok->start);
 }
 
-static void lexer_number(const char *sort, size_t len, struct token *tok)
+static void token_number(const char *algo, size_t len, struct token *tok)
 {
   ++tok->end;
   size_t n = tok->end;
 
-  while (n < len && is_d(sort[n])) {
+  while (n < len && is_d(algo[n])) {
     ++n;
   }
 
@@ -91,47 +102,100 @@ static void lexer_number(const char *sort, size_t len, struct token *tok)
   tok->type = TOKEN_NUMBER;
 }
 
-bool lexer_token_fill(const char *sort, size_t len, struct token *tok)
+static enum token_type token_basic(char c)
 {
-  lexer_skip(sort, len, tok);
-
-  if (tok->end == len) {
-    tok->type = TOKEN_END;
-    return true;
-  }
-
-  char c = sort[tok->start];
-
-#define CASE(C, TYPE)                                                                              \
-  case C: lexer_token_set(tok, TYPE); return true
   switch (c) {
-    CASE('(', TOKEN_OPENING_PARENT);
-    CASE(')', TOKEN_CLOSING_PARENT);
-    CASE('{', TOKEN_OPENING_BRACE);
-    CASE('}', TOKEN_CLOSING_BRACE);
-    CASE(',', TOKEN_COMMA);
-    CASE(':', TOKEN_COLON);
-    CASE('+', TOKEN_PLUS);
-    CASE('-', TOKEN_MINUS);
-    CASE('/', TOKEN_SLASH);
-    CASE('*', TOKEN_ASTERISK);
-  };
-#undef CASE
-
-#define CASE(COND, NAME)                                                                           \
-  if (COND) {                                                                                      \
-    lexer_##NAME(sort, len, tok);                                                                  \
-    return true;                                                                                   \
+    case '(': return TOKEN_OPENING_PARENT;
+    case ')': return TOKEN_CLOSING_PARENT;
+    case '{': return TOKEN_OPENING_BRACE;
+    case '}': return TOKEN_CLOSING_BRACE;
+    case ',': return TOKEN_COMMA;
+    case ':': return TOKEN_COLON;
+    case '+': return TOKEN_PLUS;
+    case '-': return TOKEN_MINUS;
+    case '/': return TOKEN_SLASH;
+    case '*': return TOKEN_ASTERISK;
+    default: return TOKEN_NULL;
   }
-  CASE(is_c(c), string);
-  CASE(is_d(c), number);
-#undef CASE
-
-  tok->type = TOKEN_NULL;
-  return false;
+  return TOKEN_NULL;
 }
 
-void lexer_token_eat(struct token *tok)
+static bool token_fill(const char *algo, size_t len, struct token *tok)
 {
-  tok->start = tok->end;
+  skip(algo, len, tok);
+
+  char c = algo[tok->start];
+
+  if ((tok->type = token_basic(c)) != TOKEN_NULL) {
+    ++tok->end;
+  } else if (is_c(c)) {
+    token_string(algo, len, tok);
+  } else if (is_d(c)) {
+    token_number(algo, len, tok);
+  } else {
+    tok->type = TOKEN_NULL;
+    return false;
+  }
+
+  return true;
+}
+
+static void token_free(struct token_list *tl)
+{
+  while (!STAILQ_EMPTY(&tl->head)) {
+    struct token *iter = STAILQ_FIRST(&tl->head);
+    STAILQ_REMOVE_HEAD(&tl->head, next);
+    free(iter);
+  }
+  free(tl);
+}
+
+struct token* tokenizer(const char *algo, size_t len)
+{
+  struct token_list *tl = calloc(1, sizeof(*tl));
+  assert(tl != NULL);
+  STAILQ_INIT(&tl->head);
+
+  size_t offset = 0;
+  struct token *tok;
+
+  while (offset != len) {
+    tok = token_new(tl, offset);
+    STAILQ_INSERT_TAIL(&tl->head, tok, next);
+    if (!token_fill(algo, len, tok)) {
+      token_free(tl);
+      return NULL;
+    }
+    ++tl->nr_tok;
+    offset = tok->end;
+  }
+
+  tok = token_new(tl, offset);
+  tok->type = TOKEN_END;
+  STAILQ_INSERT_TAIL(&tl->head, tok, next);
+
+  return STAILQ_FIRST(&tl->head);
+}
+
+token_t* token_next(token_t *tok)
+{
+  if (tok == NULL || tok->type == TOKEN_END) {
+    return NULL;
+  }
+  return STAILQ_NEXT(tok, next);
+}
+
+enum token_type token_type(struct token *tok)
+{
+  if (tok == NULL) {
+    return TOKEN_NULL;
+  }
+  return tok->type;
+}
+
+void token_destroy(struct token *tok)
+{
+  if (tok != NULL) {
+    token_free(tok->tl);
+  }
 }

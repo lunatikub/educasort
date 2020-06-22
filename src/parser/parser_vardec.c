@@ -13,6 +13,7 @@
 #include <assert.h>
 
 #include <educasort/lexer/lexer.h>
+#include <educasort/lexer/token.h>
 #include <educasort/parser/parser.h>
 
 #include "internal.h"
@@ -20,13 +21,16 @@
 static bool get_var_type(enum token_type tok_type, enum var_type *var_type)
 {
   switch (tok_type) {
-    case TOKEN_INTEGER: *var_type = VAR_INTEGER; return true;
-    default: return false;
+    case TOKEN_TYPE_INTEGER:
+      *var_type = VAR_INTEGER;
+      return true;
+    default:
+      return false;
   };
   return false;
 }
 
-static bool parse_vardec(struct ast_vardec **vardec, struct token *tok, const char *sort,
+static bool parse_vardec(struct ast_vardec **vardec, struct token **tok, const char *algo,
                          size_t len)
 {
   struct ast_vardec *vd = calloc(1, sizeof(*vd));
@@ -34,25 +38,23 @@ static bool parse_vardec(struct ast_vardec **vardec, struct token *tok, const ch
   *vardec = vd;
 
   /* Var name */
-  if (tok->type != TOKEN_IDENTIFIER) {
+  if (token_type(*tok) != TOKEN_IDENTIFIER) {
     return false;
   }
-  vd->var.name = token_strndup(sort, tok);
-  lexer_token_eat(tok);
+  vd->var.name = token_strndup(algo, *tok);
+  *tok = token_next(*tok);
 
   /* : */
-  if (!parse_expected(tok, sort, len, TOKEN_COLON)) {
+  if (token_type(*tok) != TOKEN_COLON) {
     return false;
   }
+  *tok = token_next(*tok);
 
   /* Var type */
-  if (!lexer_token_fill(sort, len, tok)) {
+  if (!get_var_type(token_type(*tok), &vd->var.type)) {
     return false;
   }
-  if (!get_var_type(tok->type, &vd->var.type)) {
-    return false;
-  }
-  lexer_token_eat(tok);
+  *tok = token_next(*tok);
   return true;
 }
 
@@ -66,28 +68,22 @@ static bool is_token_end(enum token_type type)
   return false;
 }
 
-bool parse_list_vardec(struct ast_vardec **vardec, struct token *tok, const char *sort, size_t len)
+bool parse_list_vardec(struct ast_vardec **vardec, token_t **tok, const char *algo, size_t len)
 {
-  if (!lexer_token_fill(sort, len, tok)) {
-    return false;
-  }
   /* Empty declaration or input. */
-  if (is_token_end(tok->type)) {
+  if (is_token_end(token_type(*tok))) {
     return true;
   }
-  if (!parse_vardec(vardec, tok, sort, len)) {
+  if (!parse_vardec(vardec, tok, algo, len)) {
     return false;
   }
-  if (!lexer_token_fill(sort, len, tok)) {
-    return false;
-  }
-  if (is_token_end(tok->type)) {
+  if (is_token_end(token_type(*tok))) {
     return true;
   }
   /* New vardec. */
-  if (tok->type == TOKEN_COMMA) {
-    lexer_token_eat(tok);
-    return parse_list_vardec(&(*vardec)->next, tok, sort, len);
+  if (token_type(*tok) == TOKEN_COMMA) {
+    *tok = token_next(*tok);
+    return parse_list_vardec(&(*vardec)->next, tok, algo, len);
   }
   return false;
 }

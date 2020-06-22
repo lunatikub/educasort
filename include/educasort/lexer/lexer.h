@@ -17,50 +17,58 @@ enum token_type {
   TOKEN_IDENTIFIER, /* [_a-zA-Z]* */
   TOKEN_NUMBER,     /* [0-9]* */
 
-  /** Punctuations **/
+  /* Basics */
   TOKEN_OPENING_PARENT, /* ( */
   TOKEN_CLOSING_PARENT, /* ) */
   TOKEN_OPENING_BRACE,  /* { */
   TOKEN_CLOSING_BRACE,  /* } */
   TOKEN_COMMA,          /* , */
   TOKEN_COLON,          /* : */
-
-  /** Maths **/
   TOKEN_PLUS, /* + */
   TOKEN_MINUS, /* - */
   TOKEN_ASTERISK, /* * */
   TOKEN_SLASH, /* / */
 
-  /** Keywords (cannot be used as identifier). **/
+  /** Keywords **/
   TOKEN_DECLARATION, /* declaration */
-  TOKEN_INTEGER,     /* integer */
+  TOKEN_TYPE_INTEGER,
 
   TOKEN_END,
 };
 
-struct token {
-  enum token_type type;
-  size_t start; /* offset of the token start. */
-  size_t end;   /* offset of the token end. */
-  size_t line;
-};
+/** Opaque structure to manipulate token. **/
+typedef struct token token_t;
 
 /**
- * Fill the next token.
+ * Get the list of tokens from a stirng input.
  *
- * @param sort String to lex.
+ * @param sort String input.
  * @param len Length of the string.
- * @param tok Token to fill.
- *
- * @return true if the token has been filled, false otherwise.
+ * @return The first token if succeeded, otherwise return @c NULL.
  */
-bool lexer_token_fill(const char *sort, size_t len, struct token *tok);
+token_t* tokenizer(const char *sort, size_t len);
 
 /**
- * Eat the token filled by @c lexer_token_fill.
+ * Get the next token.
  *
- * @param tok Token to eat.
+ * @param tok Current token.
+ * @return Next token if succeeded, otherwise return @c NULL.
  */
-void lexer_token_eat(struct token *tok);
+token_t* token_next(token_t *tok);
+
+/**
+ * Get the type of a token.
+ *
+ * @param tok Current token.
+ * @return Token type if succeeded, otherwise return @C TOKEN_NULL.
+ */
+enum token_type token_type(token_t *tok);
+
+/**
+ * Destroy the list of tokens previously created by @c tokenizer.
+ *
+ * @param tok Any token from @c tokenizer.
+ */
+void token_destroy(token_t *tok);
 
 #endif /* !EDUCASORT_LEXER_H__ */

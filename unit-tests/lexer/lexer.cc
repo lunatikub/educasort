@@ -9,15 +9,6 @@ class Lexer : public testing::Test {
 protected:
   virtual void SetUp(void);
   virtual void TearDown(void);
-
-  bool TokEq(const std::string &sort, const std::string &str, enum token_type type);
-
-  struct token tok;
-};
-
-struct token_list {
-  const std::string str;
-  enum token_type type;
 };
 
 GTEST_API_ int main(int argc, char **argv)
@@ -29,15 +20,12 @@ GTEST_API_ int main(int argc, char **argv)
 
 void Lexer::SetUp(void)
 {
-  tok.start = 0;
-  tok.end = 0;
-  tok.line = 1;
-  tok.type = TOKEN_NULL;
 }
 
-void Lexer::TearDown(void) {}
+void Lexer::TearDown(void) {
+}
 
-static const char *tokentype2str(enum token_type type)
+static const char *type2str(enum token_type type)
 {
   switch (type) {
     case TOKEN_NULL: return "NULL";
@@ -54,89 +42,67 @@ static const char *tokentype2str(enum token_type type)
     case TOKEN_SLASH: return "/";
     case TOKEN_ASTERISK: return "*";
     case TOKEN_DECLARATION: return "declaration";
-    case TOKEN_INTEGER: return "integer";
+    case TOKEN_TYPE_INTEGER: return "integer";
     case TOKEN_END: return "end";
   };
   abort();
 }
 
-bool Lexer::TokEq(const std::string &sort, const std::string &str, enum token_type type)
+#define ARRAY_SZ(TOKS) (sizeof(TOKS) / sizeof(TOKS[0]))
+
+TEST_F(Lexer, Tokenizer)
 {
-  size_t len = (tok.end - tok.start == 0) ? 1 : tok.end - tok.start;
+  std::string algo = "FooSort () +-/* Bar : integer , : { }} , declaration";
 
-  const std::string s = sort.substr(tok.start, len);
+  token_t *tok = tokenizer(algo.c_str(), algo.length());
+  ASSERT_NE(tok, nullptr);
 
-  EXPECT_EQ(s, str) << "Lexer test error: token, "
-                    << "expected: " << str << ", "
-                    << "result: " << s << std::endl;
-
-  EXPECT_EQ(type, tok.type) << "Lexer test error: token type, "
-                            << "expected: " << tokentype2str(type) << ", "
-                            << "result: " << tokentype2str(tok.type) << std::endl;
-
-  return s == str && type == tok.type;
-}
-
-#define TOKS_SZ(TOKS) (sizeof(TOKS) / sizeof(TOKS[0]))
-
-TEST_F(Lexer, isChar)
-{
-  EXPECT_TRUE(is_c('a'));
-  EXPECT_TRUE(is_c('Z'));
-  EXPECT_TRUE(is_c('_'));
-  EXPECT_FALSE(is_c('1'));
-  EXPECT_FALSE(is_c('['));
-}
-
-TEST_F(Lexer, isDigit)
-{
-  EXPECT_TRUE(is_d('0'));
-  EXPECT_TRUE(is_d('7'));
-  EXPECT_FALSE(is_d('a'));
-  EXPECT_FALSE(is_c('['));
-}
-
-TEST_F(Lexer, AllowedToken)
-{
-  std::string algo = " FooSort (  A ) +-/* Bar : integer , : { }} , declaration";
-
-  const static struct token_list toks[] = {
-    { "FooSort", TOKEN_IDENTIFIER },
-    { "(", TOKEN_OPENING_PARENT },
-    { "A", TOKEN_IDENTIFIER },
-    { ")", TOKEN_CLOSING_PARENT },
-    { "+", TOKEN_PLUS },
-    { "-", TOKEN_MINUS },
-    { "/", TOKEN_SLASH },
-    { "*", TOKEN_ASTERISK },
-    { "Bar", TOKEN_IDENTIFIER },
-    { ":", TOKEN_COLON },
-    { "integer", TOKEN_INTEGER },
-    { ",", TOKEN_COMMA },
-    { ":", TOKEN_COLON },
-    { "{", TOKEN_OPENING_BRACE },
-    { "}", TOKEN_CLOSING_BRACE },
-    { "}", TOKEN_CLOSING_BRACE },
-    { ",", TOKEN_COMMA },
-    { "declaration", TOKEN_DECLARATION },
+  const static enum token_type expected_type[] = {
+    TOKEN_IDENTIFIER,
+    TOKEN_OPENING_PARENT,
+    TOKEN_CLOSING_PARENT,
+    TOKEN_PLUS,
+    TOKEN_MINUS,
+    TOKEN_SLASH,
+    TOKEN_ASTERISK,
+    TOKEN_IDENTIFIER,
+    TOKEN_COLON,
+    TOKEN_TYPE_INTEGER,
+    TOKEN_COMMA,
+    TOKEN_COLON,
+    TOKEN_OPENING_BRACE,
+    TOKEN_CLOSING_BRACE,
+    TOKEN_CLOSING_BRACE,
+    TOKEN_COMMA,
+    TOKEN_DECLARATION,
   };
 
-  const struct token_list *iter;
-  for (iter = &toks[0]; iter != &toks[TOKS_SZ(toks)]; ++iter) {
-    ASSERT_TRUE(lexer_token_fill(algo.c_str(), algo.length(), &tok));
-    ASSERT_TRUE(TokEq(algo, iter->str, iter->type))
-      << "Lexer test error: '" << iter->str << std::endl;
-    lexer_token_eat(&tok);
+  for (enum token_type const *type = &expected_type[0];
+       type != &expected_type[ARRAY_SZ(expected_type)];
+       ++type) {
+    EXPECT_EQ(*type, token_type(tok))
+      << "expected type: " << type2str(*type)
+      << ", unexpected: " << type2str(token_type(tok)) << std::endl;
+    ASSERT_NE(tok = token_next(tok), nullptr);
   }
-  ASSERT_TRUE(lexer_token_fill(algo.c_str(), algo.length(), &tok));
-  ASSERT_EQ(tok.type, TOKEN_END) << "Lexer test error: expected end" << std::endl;
+  // No more token
+  EXPECT_EQ(token_next(tok), nullptr);
+  EXPECT_EQ(token_next(tok), nullptr);
+
+  token_destroy(tok);
+
 }
 
 TEST_F(Lexer, TokenNULL)
 {
   std::string algo;
+  struct token *tok;
 
-  algo = "@";
-  ASSERT_FALSE(lexer_token_fill(algo.c_str(), algo.length(), &tok));
-  EXPECT_EQ(tok.type, TOKEN_NULL);
+  algo = "~";
+  tok = tokenizer(algo.c_str(), algo.length());
+  ASSERT_EQ(tok, nullptr);
+
+  algo = "(+~";
+  tok = tokenizer(algo.c_str(), algo.length());
+  ASSERT_EQ(tok, nullptr);
 }

@@ -15,28 +15,26 @@
 
 #include "internal.h"
 
-bool parse_declaration(struct ast_vardec **vardec, struct token *tok, const char *sort, size_t len)
+bool parse_declaration(struct ast_vardec **vardec, struct token **tok, const char *algo, size_t len)
 {
-  if (!lexer_token_fill(sort, len, tok)) {
-    return false;
-  }
   /* Empty declaration */
-  if (tok->type == TOKEN_CLOSING_BRACE) {
+  if (token_type(*tok) == TOKEN_CLOSING_BRACE) {
     return true;
   }
-  if (tok->type != TOKEN_DECLARATION) {
+  if (token_type(*tok) != TOKEN_DECLARATION) {
     return false;
   }
-  lexer_token_eat(tok);
-
-  if (!parse_expected(tok, sort, len, TOKEN_OPENING_BRACE)) {
+  *tok = token_next(*tok);
+  if (token_type(*tok) != TOKEN_OPENING_BRACE) {
     return false;
   }
-  if (!parse_list_vardec(vardec, tok, sort, len)) {
+  *tok = token_next(*tok);
+  if (!parse_list_vardec(vardec, tok, algo, len)) {
     return false;
   }
-  if (!parse_expected(tok, sort, len, TOKEN_CLOSING_BRACE)) {
+  if (token_type(*tok) != TOKEN_CLOSING_BRACE) {
     return false;
   }
+  *tok = token_next(*tok);
   return true;
 }

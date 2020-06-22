@@ -21,8 +21,8 @@ TEST_F(Visitor, Style)
   struct visitor_style vs;
   struct ast ast;
 
-  std::string sort = "FooSort() { declaration{i:integer,j : integer} }";
-  EXPECT_TRUE(parse(&ast, sort.c_str(), sort.length()));
+  std::string algo = "FooSort() { declaration{i:integer,j : integer} }";
+  EXPECT_TRUE(parse(&ast, algo.c_str(), algo.length()));
 
   visitor_style_init(&vs);
   visit(&ast, &vs.visitor);
