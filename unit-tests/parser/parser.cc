@@ -45,7 +45,7 @@ TEST_F(Parser, ListVarDec)
   algo = "i:integer, j:integer";
   tok = tokenizer(algo.c_str(), algo.length());
 
-  EXPECT_TRUE(parse_list_vardec(&vardec, &tok, algo.c_str(), algo.length()));
+  EXPECT_TRUE(parse_list_vardec(&vardec, &tok));
 
   EXPECT_EQ(strcmp(vardec->var.name, "i"), 0);
   EXPECT_EQ(vardec->var.type, VAR_INTEGER);
@@ -61,7 +61,7 @@ TEST_F(Parser, MissingColonVardec)
 {
   algo = "i integer";
   tok = tokenizer(algo.c_str(), algo.length());
-  EXPECT_FALSE(parse_list_vardec(&vardec, &tok, algo.c_str(), algo.length()));
+  EXPECT_FALSE(parse_list_vardec(&vardec, &tok));
   ast_destroy_vardec(vardec);
 }
 
@@ -69,7 +69,7 @@ TEST_F(Parser, MissingTypeVardec)
 {
   algo = "i, j : integer";
   tok = tokenizer(algo.c_str(), algo.length());
-  EXPECT_FALSE(parse_list_vardec(&vardec, &tok, algo.c_str(), algo.length()));
+  EXPECT_FALSE(parse_list_vardec(&vardec, &tok));
   ast_destroy_vardec(vardec);
 }
 
@@ -77,7 +77,7 @@ TEST_F(Parser, MissingCommaVardec)
 {
   algo = "i:integer j:integer";
   tok = tokenizer(algo.c_str(), algo.length());
-  EXPECT_FALSE(parse_list_vardec(&vardec, &tok, algo.c_str(), algo.length()));
+  EXPECT_FALSE(parse_list_vardec(&vardec, &tok));
   ast_destroy_vardec(vardec);
 }
 
@@ -125,7 +125,7 @@ TEST_F(Parser, EmptyDeclaration)
 {
   algo = "declaration { }";
   tok = tokenizer(algo.c_str(), algo.length());
-  EXPECT_TRUE(parse_declaration(&vardec, &tok, algo.c_str(), algo.length()));
+  EXPECT_TRUE(parse_declaration(&vardec, &tok));
   ast_destroy_vardec(vardec);
 }
 
@@ -133,7 +133,7 @@ TEST_F(Parser, Declaration)
 {
   algo = "declaration { i:integer, j:integer }";
   tok = tokenizer(algo.c_str(), algo.length());
-  EXPECT_TRUE(parse_declaration(&vardec, &tok, algo.c_str(), algo.length()));
+  EXPECT_TRUE(parse_declaration(&vardec, &tok));
   EXPECT_EQ(strcmp(vardec->var.name, "i"), 0);
   EXPECT_EQ(vardec->var.type, VAR_INTEGER);
   ASSERT_NE(vardec->next, nullptr);
@@ -148,6 +148,6 @@ TEST_F(Parser, TypoDeclaration)
 {
   algo = "bar { }";
   tok = tokenizer(algo.c_str(), algo.length());
-  EXPECT_FALSE(parse_declaration(&vardec, &tok, algo.c_str(), algo.length()));
+  EXPECT_FALSE(parse_declaration(&vardec, &tok));
   ast_destroy_vardec(vardec);
 }

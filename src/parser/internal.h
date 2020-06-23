@@ -14,12 +14,12 @@
 /**
  * Parse a declaration block.
  */
-bool parse_declaration(struct ast_vardec **vardec, struct token **tok, const char *algo, size_t len);
+bool parse_declaration(struct ast_vardec **vardec, struct token **tok);
 
 /**
  * Parse a variable list declaration.
  */
-bool parse_list_vardec(struct ast_vardec **vardec, struct token **tok, const char *algo, size_t len);
+bool parse_list_vardec(struct ast_vardec **vardec, struct token **tok);
 
 /**
  * Unit-test

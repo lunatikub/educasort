@@ -36,6 +36,36 @@ struct ast_vardec {
 };
 
 /**
+ * Enumeration of operator type.
+ */
+enum operator_type {
+  OP_NULL,
+  OP_ADD,
+  OP_SUB,
+  OP_MULT,
+  OP_DIV,
+};
+
+/**
+ * Enumaration of expression type.
+ */
+enum expr_type {
+  EXPR_NULL,
+  EXPR_OPERATOR,
+  EXPR_UNARY,
+};
+
+/**
+ * Expression node.
+ */
+struct ast_expr {
+  enum expr_type type;
+  struct ast_expr *lhs; /* left hand side of the operator */
+  struct ast_expr *rhs; /* right hand side of the operator */
+  enum operator_type op; /* only used if @c expr_type is an @c EXPR_OPERATOR */
+};
+
+/**
  * Abstract syntax tree root node.
  */
 struct ast {

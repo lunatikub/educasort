@@ -14,13 +14,12 @@
 
 #include "internal.h"
 
-char* token_strndup(const char *sort, const token_t *tok)
+char* token_strndup(const token_t *tok)
 {
-  return strndup(&sort[tok->start], tok->end - tok->start);
+  return strndup(&tok->tl->algo[tok->start], tok->end - tok->start);
 }
 
-int token_strncmp(const token_t *tok, const char *algo, const char *str,
-                  size_t len)
+int token_strncmp(const token_t *tok, const char *str, size_t len)
 {
-  return strncmp(algo + tok->start, str, len);
+  return strncmp(tok->tl->algo + tok->start, str, len);
 }

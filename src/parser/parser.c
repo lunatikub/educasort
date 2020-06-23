@@ -13,24 +13,24 @@
 
 #include "internal.h"
 
-static bool parse_sort_name(struct ast *root, struct token **tok, const char *algo, size_t len)
+static bool parse_sort_name(struct ast *root, struct token **tok)
 {
   if (token_type(*tok) != TOKEN_IDENTIFIER) {
     return false;
   }
-  root->name = token_strndup(algo, *tok);
+  root->name = token_strndup(*tok);
   *tok = token_next(*tok);
   return true;
 }
 
-static bool parse_input(struct ast *root, struct token **tok, const char *algo, size_t len)
+static bool parse_input(struct ast *root, struct token **tok)
 {
   if (token_type(*tok) != TOKEN_OPENING_PARENT) {
     return false;
   }
   *tok = token_next(*tok);
 
-  if (!parse_list_vardec(&root->input, tok, algo, len)) {
+  if (!parse_list_vardec(&root->input, tok)) {
     return false;
   }
 
@@ -41,19 +41,19 @@ static bool parse_input(struct ast *root, struct token **tok, const char *algo, 
   return true;
 }
 
-static bool parse_sort(struct ast *root, token_t **tok, const char *algo, size_t len)
+static bool parse_sort(struct ast *root, token_t **tok)
 {
-  if (!parse_sort_name(root, tok, algo, len)) {
+  if (!parse_sort_name(root, tok)) {
     return false;
   }
-  if (!parse_input(root, tok, algo, len)) {
+  if (!parse_input(root, tok)) {
     return false;
   }
   if (token_type(*tok) != TOKEN_OPENING_BRACE) {
     return false;
   }
   *tok = token_next(*tok);
-  if (!parse_declaration(&root->declaration, tok, algo, len)) {
+  if (!parse_declaration(&root->declaration, tok)) {
     return false;
   }
   if (token_type(*tok) != TOKEN_CLOSING_BRACE) {
@@ -69,8 +69,8 @@ bool parse(struct ast *ast, const char *algo, size_t len)
   token_t *tok = tokenizer(algo, len);
 
   memset(ast, 0, sizeof(*ast));
-
-  ret = parse_sort(ast, &tok, algo, len);
+  ret = parse_sort(ast, &tok);
   token_destroy(tok);
+
   return ret;
 }

@@ -39,8 +39,11 @@ static bool is_d(char d)
   return false;
 }
 
-static void skip(const char *algo, size_t len, struct token *tok)
+static void skip(struct token *tok)
 {
+  const char *algo = tok->tl->algo;
+  size_t len = tok->tl->len;
+
   while (tok->start < len &&
          (algo[tok->start] == ' ' || algo[tok->start] == '\n' || algo[tok->start] == '\t')) {
     if (algo[tok->start] == '\n') {
@@ -76,25 +79,25 @@ static enum token_type keyword_get(const char *str, size_t len)
   return TOKEN_IDENTIFIER;
 }
 
-static void token_string(const char *algo, size_t len, struct token *tok)
+static void token_string(struct token *tok)
 {
   ++tok->end;
   size_t n = tok->end;
 
-  while (n < len && is_c(algo[n])) {
+  while (n < tok->tl->len && is_c(tok->tl->algo[n])) {
     ++n;
   }
   tok->end = n;
 
-  tok->type = keyword_get(&algo[tok->start], tok->end - tok->start);
+  tok->type = keyword_get(&tok->tl->algo[tok->start], tok->end - tok->start);
 }
 
-static void token_number(const char *algo, size_t len, struct token *tok)
+static void token_number(struct token *tok)
 {
   ++tok->end;
   size_t n = tok->end;
 
-  while (n < len && is_d(algo[n])) {
+  while (n < tok->tl->len && is_d(tok->tl->algo[n])) {
     ++n;
   }
 
@@ -120,18 +123,18 @@ static enum token_type token_basic(char c)
   return TOKEN_NULL;
 }
 
-static bool token_fill(const char *algo, size_t len, struct token *tok)
+static bool token_fill(struct token *tok)
 {
-  skip(algo, len, tok);
+  skip(tok);
 
-  char c = algo[tok->start];
+  char c = tok->tl->algo[tok->start];
 
   if ((tok->type = token_basic(c)) != TOKEN_NULL) {
     ++tok->end;
   } else if (is_c(c)) {
-    token_string(algo, len, tok);
+    token_string(tok);
   } else if (is_d(c)) {
-    token_number(algo, len, tok);
+    token_number(tok);
   } else {
     tok->type = TOKEN_NULL;
     return false;
@@ -156,13 +159,16 @@ struct token* tokenizer(const char *algo, size_t len)
   assert(tl != NULL);
   STAILQ_INIT(&tl->head);
 
+  tl->algo = algo;
+  tl->len = len;
+
   size_t offset = 0;
   struct token *tok;
 
   while (offset != len) {
     tok = token_new(tl, offset);
     STAILQ_INSERT_TAIL(&tl->head, tok, next);
-    if (!token_fill(algo, len, tok)) {
+    if (!token_fill(tok)) {
       token_free(tl);
       return NULL;
     }

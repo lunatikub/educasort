@@ -26,6 +26,8 @@ struct token {
 struct token_list {
   STAILQ_HEAD(, token) head;
   uint32_t nr_tok;
+  const char *algo;
+  size_t len;
 };
 
 #endif /* !LEXER_INTERNAL_H__ */

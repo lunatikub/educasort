@@ -15,7 +15,7 @@
 
 #include "internal.h"
 
-bool parse_declaration(struct ast_vardec **vardec, struct token **tok, const char *algo, size_t len)
+bool parse_declaration(struct ast_vardec **vardec, struct token **tok)
 {
   /* Empty declaration */
   if (token_type(*tok) == TOKEN_CLOSING_BRACE) {
@@ -29,7 +29,7 @@ bool parse_declaration(struct ast_vardec **vardec, struct token **tok, const cha
     return false;
   }
   *tok = token_next(*tok);
-  if (!parse_list_vardec(vardec, tok, algo, len)) {
+  if (!parse_list_vardec(vardec, tok)) {
     return false;
   }
   if (token_type(*tok) != TOKEN_CLOSING_BRACE) {

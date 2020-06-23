@@ -30,8 +30,7 @@ static bool get_var_type(enum token_type tok_type, enum var_type *var_type)
   return false;
 }
 
-static bool parse_vardec(struct ast_vardec **vardec, struct token **tok, const char *algo,
-                         size_t len)
+static bool parse_vardec(struct ast_vardec **vardec, struct token **tok)
 {
   struct ast_vardec *vd = calloc(1, sizeof(*vd));
   assert(vd != NULL);
@@ -41,7 +40,7 @@ static bool parse_vardec(struct ast_vardec **vardec, struct token **tok, const c
   if (token_type(*tok) != TOKEN_IDENTIFIER) {
     return false;
   }
-  vd->var.name = token_strndup(algo, *tok);
+  vd->var.name = token_strndup(*tok);
   *tok = token_next(*tok);
 
   /* : */
@@ -68,13 +67,13 @@ static bool is_token_end(enum token_type type)
   return false;
 }
 
-bool parse_list_vardec(struct ast_vardec **vardec, token_t **tok, const char *algo, size_t len)
+bool parse_list_vardec(struct ast_vardec **vardec, token_t **tok)
 {
   /* Empty declaration or input. */
   if (is_token_end(token_type(*tok))) {
     return true;
   }
-  if (!parse_vardec(vardec, tok, algo, len)) {
+  if (!parse_vardec(vardec, tok)) {
     return false;
   }
   if (is_token_end(token_type(*tok))) {
@@ -83,7 +82,7 @@ bool parse_list_vardec(struct ast_vardec **vardec, token_t **tok, const char *al
   /* New vardec. */
   if (token_type(*tok) == TOKEN_COMMA) {
     *tok = token_next(*tok);
-    return parse_list_vardec(&(*vardec)->next, tok, algo, len);
+    return parse_list_vardec(&(*vardec)->next, tok);
   }
   return false;
 }
