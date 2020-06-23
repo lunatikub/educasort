@@ -14,7 +14,7 @@
 
 #include "internal.h"
 
-char* token_strndup(const token_t *tok)
+char *token_strndup(const token_t *tok)
 {
   return strndup(&tok->tl->algo[tok->start], tok->end - tok->start);
 }

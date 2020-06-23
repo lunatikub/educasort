@@ -46,6 +46,17 @@ enum operator_type {
   OP_DIV,
 };
 
+struct ast_expr;
+
+/**
+ * Operator node.
+ */
+struct ast_operator {
+  struct ast_expr *lhs;
+  struct ast_expr *rhs;
+  enum operator_type type;
+};
+
 /**
  * Enumaration of expression type.
  */
@@ -53,6 +64,8 @@ enum expr_type {
   EXPR_NULL,
   EXPR_OPERATOR,
   EXPR_UNARY,
+  EXPR_NUMBER,
+  EXPR_VAR,
 };
 
 /**
@@ -60,9 +73,12 @@ enum expr_type {
  */
 struct ast_expr {
   enum expr_type type;
-  struct ast_expr *lhs; /* left hand side of the operator */
-  struct ast_expr *rhs; /* right hand side of the operator */
-  enum operator_type op; /* only used if @c expr_type is an @c EXPR_OPERATOR */
+  union {
+    struct ast_operator op;
+    struct ast_expr *unary;
+    int64_t number;
+    char *var;
+  };
 };
 
 /**

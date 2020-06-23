@@ -24,10 +24,10 @@ enum token_type {
   TOKEN_CLOSING_BRACE,  /* } */
   TOKEN_COMMA,          /* , */
   TOKEN_COLON,          /* : */
-  TOKEN_PLUS, /* + */
-  TOKEN_MINUS, /* - */
-  TOKEN_ASTERISK, /* * */
-  TOKEN_SLASH, /* / */
+  TOKEN_PLUS,           /* + */
+  TOKEN_MINUS,          /* - */
+  TOKEN_ASTERISK,       /* * */
+  TOKEN_SLASH,          /* / */
 
   /** Keywords **/
   TOKEN_DECLARATION, /* declaration */
@@ -46,7 +46,7 @@ typedef struct token token_t;
  * @param len Length of the string.
  * @return The first token if succeeded, otherwise return @c NULL.
  */
-token_t* tokenizer(const char *sort, size_t len);
+token_t *tokenizer(const char *sort, size_t len);
 
 /**
  * Get the next token.
@@ -54,7 +54,7 @@ token_t* tokenizer(const char *sort, size_t len);
  * @param tok Current token.
  * @return Next token if succeeded, otherwise return @c NULL.
  */
-token_t* token_next(token_t *tok);
+token_t *token_next(token_t *tok);
 
 /**
  * Get the type of a token.

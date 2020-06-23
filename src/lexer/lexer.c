@@ -14,7 +14,7 @@
 #include "internal.h"
 #include <educasort/lexer/lexer.h>
 
-static struct token* token_new(struct token_list *tl, size_t offset)
+static struct token *token_new(struct token_list *tl, size_t offset)
 {
   struct token *t = calloc(1, sizeof(*t));
   assert(t != NULL);
@@ -153,7 +153,7 @@ static void token_free(struct token_list *tl)
   free(tl);
 }
 
-struct token* tokenizer(const char *algo, size_t len)
+struct token *tokenizer(const char *algo, size_t len)
 {
   struct token_list *tl = calloc(1, sizeof(*tl));
   assert(tl != NULL);
@@ -183,7 +183,7 @@ struct token* tokenizer(const char *algo, size_t len)
   return STAILQ_FIRST(&tl->head);
 }
 
-token_t* token_next(token_t *tok)
+token_t *token_next(token_t *tok)
 {
   if (tok == NULL || tok->type == TOKEN_END) {
     return NULL;

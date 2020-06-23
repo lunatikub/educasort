@@ -22,6 +22,11 @@ bool parse_declaration(struct ast_vardec **vardec, struct token **tok);
 bool parse_list_vardec(struct ast_vardec **vardec, struct token **tok);
 
 /**
+ * Parse an expresion.
+ */
+bool parse_expr(struct ast_expr **expr, struct token **tok);
+
+/**
  * Unit-test
  */
 

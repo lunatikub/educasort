@@ -18,12 +18,9 @@ GTEST_API_ int main(int argc, char **argv)
   return RUN_ALL_TESTS();
 }
 
-void Lexer::SetUp(void)
-{
-}
+void Lexer::SetUp(void) {}
 
-void Lexer::TearDown(void) {
-}
+void Lexer::TearDown(void) {}
 
 static const char *type2str(enum token_type type)
 {
@@ -58,31 +55,17 @@ TEST_F(Lexer, Tokenizer)
   ASSERT_NE(tok, nullptr);
 
   const static enum token_type expected_type[] = {
-    TOKEN_IDENTIFIER,
-    TOKEN_OPENING_PARENT,
-    TOKEN_CLOSING_PARENT,
-    TOKEN_PLUS,
-    TOKEN_MINUS,
-    TOKEN_SLASH,
-    TOKEN_ASTERISK,
-    TOKEN_IDENTIFIER,
-    TOKEN_COLON,
-    TOKEN_TYPE_INTEGER,
-    TOKEN_COMMA,
-    TOKEN_COLON,
-    TOKEN_OPENING_BRACE,
-    TOKEN_CLOSING_BRACE,
-    TOKEN_CLOSING_BRACE,
-    TOKEN_COMMA,
+    TOKEN_IDENTIFIER,    TOKEN_OPENING_PARENT, TOKEN_CLOSING_PARENT, TOKEN_PLUS,
+    TOKEN_MINUS,         TOKEN_SLASH,          TOKEN_ASTERISK,       TOKEN_IDENTIFIER,
+    TOKEN_COLON,         TOKEN_TYPE_INTEGER,   TOKEN_COMMA,          TOKEN_COLON,
+    TOKEN_OPENING_BRACE, TOKEN_CLOSING_BRACE,  TOKEN_CLOSING_BRACE,  TOKEN_COMMA,
     TOKEN_DECLARATION,
   };
 
   for (enum token_type const *type = &expected_type[0];
-       type != &expected_type[ARRAY_SZ(expected_type)];
-       ++type) {
-    EXPECT_EQ(*type, token_type(tok))
-      << "expected type: " << type2str(*type)
-      << ", unexpected: " << type2str(token_type(tok)) << std::endl;
+       type != &expected_type[ARRAY_SZ(expected_type)]; ++type) {
+    EXPECT_EQ(*type, token_type(tok)) << "expected type: " << type2str(*type)
+                                      << ", unexpected: " << type2str(token_type(tok)) << std::endl;
     ASSERT_NE(tok = token_next(tok), nullptr);
   }
   // No more token
@@ -90,7 +73,6 @@ TEST_F(Lexer, Tokenizer)
   EXPECT_EQ(token_next(tok), nullptr);
 
   token_destroy(tok);
-
 }
 
 TEST_F(Lexer, TokenNULL)

@@ -16,6 +16,7 @@ protected:
   struct ast ast;
   token_t *tok;
   struct ast_vardec *vardec;
+  struct ast_expr *expr;
 };
 
 GTEST_API_ int main(int argc, char **argv)
@@ -150,4 +151,11 @@ TEST_F(Parser, TypoDeclaration)
   tok = tokenizer(algo.c_str(), algo.length());
   EXPECT_FALSE(parse_declaration(&vardec, &tok));
   ast_destroy_vardec(vardec);
+}
+
+TEST_F(Parser, Expr)
+{
+  algo = "1 + 2";
+  tok = tokenizer(algo.c_str(), algo.length());
+  EXPECT_TRUE(parse_expr(&expr, &tok));
 }

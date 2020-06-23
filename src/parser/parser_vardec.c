@@ -21,11 +21,8 @@
 static bool get_var_type(enum token_type tok_type, enum var_type *var_type)
 {
   switch (tok_type) {
-    case TOKEN_TYPE_INTEGER:
-      *var_type = VAR_INTEGER;
-      return true;
-    default:
-      return false;
+    case TOKEN_TYPE_INTEGER: *var_type = VAR_INTEGER; return true;
+    default: return false;
   };
   return false;
 }
@@ -59,9 +56,7 @@ static bool parse_vardec(struct ast_vardec **vardec, struct token **tok)
 
 static bool is_token_end(enum token_type type)
 {
-  if (type == TOKEN_CLOSING_BRACE ||
-      type == TOKEN_CLOSING_PARENT ||
-      type == TOKEN_END) {
+  if (type == TOKEN_CLOSING_BRACE || type == TOKEN_CLOSING_PARENT || type == TOKEN_END) {
     return true;
   }
   return false;
