@@ -44,4 +44,20 @@ void string_append(struct string *dst, const char *src);
  */
 const char *string_get(const struct string *str);
 
+/**
+ * Get the length of the string.
+ *
+ * @param String previously allocated with @c string_create.
+ * @return Length.
+ */
+size_t string_len(const struct string *str);
+
+/**
+ * Get the capacity of the string.
+ *
+ * @param String previously allocated with @c string_create.
+ * @return Capacity.
+ */
+size_t string_capa(const struct string *str);
+
 #endif /* !EDUCASORT_STRING_H__ */

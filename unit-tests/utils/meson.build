@@ -2,6 +2,7 @@ test_utils_src = files(
   'main.cc',
   'string.cc',
   'file.cc',
+  'dot.cc',
 )
 
 unit_test_utils = executable(

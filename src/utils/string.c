@@ -20,8 +20,6 @@ struct string {
   size_t capa;
 };
 
-#ifdef UNIT_TEST_TARGET
-
 size_t string_capa(const struct string *str)
 {
   return str->capa;
@@ -31,8 +29,6 @@ size_t string_len(const struct string *str)
 {
   return str->len;
 }
-
-#endif
 
 const char *string_get(const struct string *str)
 {

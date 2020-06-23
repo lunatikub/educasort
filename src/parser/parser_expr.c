@@ -192,5 +192,8 @@ bool parse_expr(struct ast_expr **expr, struct token **tok)
 {
   struct ast_expr *new_expr = parse_add_sub(tok);
   *expr = new_expr;
-  return true;
+  if (new_expr != NULL) {
+    return true;
+  }
+  return false;
 }
