@@ -5,6 +5,7 @@ test_parser_src = files(
 unit_test_parser = executable(
   'unit-test-parser',
   test_parser_src,
+  utils_src,
   parser_src,
   lexer_src,
   include_directories: [

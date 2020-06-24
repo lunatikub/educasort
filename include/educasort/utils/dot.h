@@ -17,6 +17,7 @@ enum dot_color {
   COLOR_BLACK,
   COLOR_BLUE,
   COLOR_RED,
+  COLOR_GREEN,
 };
 
 /** https://graphviz.org/doc/info/shapes.html **/
@@ -24,6 +25,7 @@ enum dot_shape {
   SHAPE_BOX,
   SHAPE_CIRCLE,
   SHAPE_OCTAGON,
+  SHAPE_ELLIPSE,
 };
 
 /** Opaque structure to manipulate graph and nodes. */
@@ -53,8 +55,8 @@ void dot_graph_destroy(dot_graph_t *graph);
  * @param shape Shape of the node.
  * @return The new empty graph allocated.
  */
-dot_node_t *dot_node_add(dot_graph_t *graph, const char *label,
-                         enum dot_color color, enum dot_shape shape);
+dot_node_t *dot_node_add(dot_graph_t *graph, const char *label, enum dot_color color,
+                         enum dot_shape shape);
 
 /**
  * Add an edge between two nodes.
@@ -65,8 +67,8 @@ dot_node_t *dot_node_add(dot_graph_t *graph, const char *label,
  * @param label Label of the edge.
  * @param directed True if directed, otherwise false.
  */
-void dot_edge_add(dot_graph_t *graph, dot_node_t *src, dot_node_t *dst,
-                  const char *label, bool directed);
+void dot_edge_add(dot_graph_t *graph, dot_node_t *src, dot_node_t *dst, const char *label,
+                  bool directed);
 
 /**
  * Dump a graph dot into a string.

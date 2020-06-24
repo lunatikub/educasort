@@ -5,6 +5,7 @@ test_lexer_src = files(
 unit_test_lexer = executable(
   'unit-test-lexer',
   test_lexer_src,
+  utils_src,
   lexer_src,
   include_directories: [
     test_lexer_inc,

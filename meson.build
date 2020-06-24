@@ -113,6 +113,7 @@ endforeach
 
 applications = [
   'algo_style',
+  'dump_dot_expr',
 ]
 
 foreach app : applications

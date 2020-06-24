@@ -48,9 +48,8 @@ static struct ast_expr *new_number(token_t *tok)
   struct ast_expr *expr = calloc(1, sizeof(*expr));
   assert(expr);
 
-  (void)tok;
   expr->type = EXPR_NUMBER;
-  expr->number = 42;
+  expr->number = token_u64(tok);
 
   return expr;
 }

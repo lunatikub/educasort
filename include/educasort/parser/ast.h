@@ -76,7 +76,7 @@ struct ast_expr {
   union {
     struct ast_operator op;
     struct ast_expr *unary;
-    int64_t number;
+    uint64_t number;
     char *var;
   };
 };

@@ -42,6 +42,7 @@ static const char *dot_get_color(enum dot_color color)
     [COLOR_BLACK] = "black",
     [COLOR_BLUE] = "blue",
     [COLOR_RED] = "red",
+    [COLOR_GREEN] = "green",
   };
 
   return colors[color];
@@ -53,13 +54,14 @@ static const char *dot_get_shape(enum dot_shape shape)
     [SHAPE_BOX] = "box",
     [SHAPE_CIRCLE] = "circle",
     [SHAPE_OCTAGON] = "octagon",
+    [SHAPE_ELLIPSE] = "ellispe",
   };
 
   return shapes[shape];
 }
 
-struct dot_node *dot_node_add(struct dot_graph *graph, const char *label,
-                              enum dot_color color, enum dot_shape shape)
+struct dot_node *dot_node_add(struct dot_graph *graph, const char *label, enum dot_color color,
+                              enum dot_shape shape)
 {
   struct dot_node *node = calloc(1, sizeof(*node));
   assert(node != NULL);
@@ -73,8 +75,8 @@ struct dot_node *dot_node_add(struct dot_graph *graph, const char *label,
   return node;
 }
 
-void dot_edge_add(dot_graph_t *graph, dot_node_t *src, dot_node_t *dst,
-                  const char *label, bool directed)
+void dot_edge_add(dot_graph_t *graph, dot_node_t *src, dot_node_t *dst, const char *label,
+                  bool directed)
 {
   struct dot_edge *edge = calloc(1, sizeof(*edge));
   assert(edge != NULL);
@@ -163,12 +165,14 @@ void dot_dump(struct dot_graph *graph, string_t *dot)
   string_append(dot, "digraph {\n");
 
   struct dot_node *node;
-  SLIST_FOREACH(node, &graph->nodes, next) {
+  SLIST_FOREACH(node, &graph->nodes, next)
+  {
     dot_dump_node(node, dot);
   }
 
   struct dot_edge *edge;
-  SLIST_FOREACH(edge, &graph->edges, next) {
+  SLIST_FOREACH(edge, &graph->edges, next)
+  {
     dot_dump_edge(edge, dot);
   }
 
