@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
 extern "C" {
-#include "internal.h"
 #include <educasort/lexer/lexer.h>
+#include "lexer_internal.h"
 }
 
 class Lexer : public testing::Test {

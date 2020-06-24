@@ -11,8 +11,9 @@
 #include <string.h>
 #include <stdint.h>
 
-#include "internal.h"
 #include <educasort/lexer/lexer.h>
+
+#include "lexer_internal.h"
 
 static struct token *token_new(struct token_list *tl, size_t offset)
 {

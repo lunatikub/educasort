@@ -13,7 +13,7 @@
 #include <educasort/lexer/token.h>
 #include <educasort/utils/convert.h>
 
-#include "internal.h"
+#include "lexer_internal.h"
 
 char *token_strndup(const token_t *tok)
 {
