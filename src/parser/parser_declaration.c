@@ -13,7 +13,7 @@
 #include <educasort/lexer/lexer.h>
 #include <educasort/parser/parser.h>
 
-#include "internal.h"
+#include "parser_internal.h"
 
 bool parse_declaration(struct ast_vardec **vardec, struct token **tok)
 {

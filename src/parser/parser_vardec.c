@@ -16,7 +16,7 @@
 #include <educasort/lexer/token.h>
 #include <educasort/parser/parser.h>
 
-#include "internal.h"
+#include "parser_internal.h"
 
 static bool get_var_type(enum token_type tok_type, enum var_type *var_type)
 {

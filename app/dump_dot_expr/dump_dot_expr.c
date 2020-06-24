@@ -11,7 +11,7 @@
 #include <educasort/utils/string.h>
 #include <educasort/utils/convert.h>
 
-#include "internal.h"
+#include "parser_internal.h"
 
 static dot_node_t* dump_dot_expr(struct ast_expr *expr, dot_graph_t *graph);
 

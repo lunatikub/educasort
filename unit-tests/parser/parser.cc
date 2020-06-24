@@ -4,7 +4,7 @@ extern "C" {
 #include <educasort/lexer/lexer.h>
 #include <educasort/parser/parser.h>
 #include <educasort/parser/ast.h>
-#include "internal.h"
+#include "parser_internal.h"
 }
 
 class Parser : public testing::Test {

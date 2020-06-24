@@ -11,7 +11,7 @@
 #include <educasort/lexer/token.h>
 #include <educasort/parser/parser.h>
 
-#include "internal.h"
+#include "parser_internal.h"
 
 static bool parse_sort_name(struct ast *root, struct token **tok)
 {

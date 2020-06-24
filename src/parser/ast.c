@@ -9,7 +9,7 @@
 
 #include <educasort/parser/ast.h>
 
-#include "internal.h"
+#include "parser_internal.h"
 
 PRIVATE_EXCEPT_UNIT_TEST
 void ast_destroy_vardec(struct ast_vardec *vardec)

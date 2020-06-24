@@ -14,7 +14,7 @@
 #include <educasort/lexer/token.h>
 #include <educasort/parser/parser.h>
 
-#include "internal.h"
+#include "parser_internal.h"
 
 static struct ast_expr *parse_add_sub(struct token **tok);
 
